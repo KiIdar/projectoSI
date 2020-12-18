@@ -4,7 +4,6 @@ import Protecao.Protecao;
 import InformacaoSistema.CPU;
 import InformacaoSistema.HostName;
 import InformacaoSistema.MAC;
-import InformacaoSistema.Motherboard;
 import java.io.IOException;
 import java.util.Scanner;
 
