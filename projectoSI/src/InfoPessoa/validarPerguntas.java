@@ -16,78 +16,58 @@ import javax.swing.JOptionPane;
  */
 public class validarPerguntas {
 
-    public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    public void isValidNome(String nome) {
+        nome = JOptionPane.showInputDialog(null, "Escreva o seu nome e o seu sobrenome:");
 
-    public boolean isValidNome(String nome) {
-        boolean isNomeIdValid = false;
-        nome = JOptionPane.showInputDialog(null, "Escreva o seu nome:");
-
-        String expression = "^[A-Z][a-z]* [A-Z][a-z]*$";
+        String expression = "^[a-zA-Z\\u00C0-\\u017F´]+\\s+[a-zA-Z\\u00C0-\\u017F´]{0,}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(nome);
+        while (!pattern.matcher(nome).find()) {
 
-        while (matcher.find()) {
-
-            /*if (matcher.matches()) {
-                System.out.println("Nome final: " + nome);
-                isNomeIdValid = true;
-            } else {*/
-                nome = JOptionPane.showInputDialog(null, "Escreva o seu nome:");
-                isNomeIdValid = false;
-            //}
+            JOptionPane.showMessageDialog(null, "Nome inválido.\nTente novamente.");
+            nome = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu nome e o seu sobrenome:"));
         }
-
-        return isNomeIdValid;
+        System.out.println("Nome final: "+nome);
     }
-
-    /*
-    public void isValidEmail(String email) {
-        boolean inputAccepted = false;
-        String title = "Please anter a number";
-        int initialType = JOptionPane.QUESTION_MESSAGE;
-
-        while (!inputAccepted) {
-            email = JOptionPane.showInputDialog(null, "Escreva o seu e-mail:");
-
-            Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$");
-            Matcher regex = p.matcher(email);
-            //Matcher regex = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
-            if (regex.find()) {
-                JOptionPane.showMessageDialog(null, "Please enter only string");
-            } else {
-                JOptionPane.showMessageDialog(null, "Email aceite!");
-            }
-
-            //return isEmailIdValid;
-        }
-
     
+    
+    public void isValidEmail(String email) {
+        email = JOptionPane.showInputDialog(null, "Escreva o seu email:");
 
-     */
-    public boolean isValidNumTelemovel(String numero) {
-        boolean isNumIdValid = false;
-        if (numero != null && numero.length() > 0) {
-            String expression = "/9[1236][0-9]{7}|2[1-9][0-9]{7}/";
-            Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(numero);
-            if (matcher.matches()) {
-                isNumIdValid = true;
-            }
+        String expression = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        while (!pattern.matcher(email).find()) {
+
+            JOptionPane.showMessageDialog(null, "Nome inválido.\nTente novamente.");
+            email = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu email:"));
         }
-        return isNumIdValid;
+        System.out.println("E-mail final: "+email);
+    }
+    
+    public void isValidNumTelemovel(String numero) {
+        numero = JOptionPane.showInputDialog(null, "Escreva o seu numero:");
+
+        String expression = "^9[1236][0-9]{7}|2[1-9][0-9]{7}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        while (!pattern.matcher(numero).find()) {
+
+            JOptionPane.showMessageDialog(null, "Nome inválido.\nTente novamente.");
+            numero = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu numero:"));
+        }
+        System.out.println("Numero telemovel final: "+numero);
+    }
+    
+    public void isValidCC(String cc) {
+        cc = JOptionPane.showInputDialog(null, "Escreva o seu número do cartão cidadão final:");
+
+        String expression = "^9[1236][0-9]{7}|2[1-9][0-9]{7}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        while (!pattern.matcher(cc).find()) {
+
+            JOptionPane.showMessageDialog(null, "Nome inválido.\nTente novamente.");
+            cc = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu número do cartão cidadão final:"));
+        }
+        System.out.println("número do cartão cidadão final: "+cc);
     }
 
-    public boolean isValidCC(String cc) {
-        boolean isCCIdValid = false;
-        if (cc != null && cc.length() > 0) {
-            String expression = "^[0-9]{8}[ -]*[0-9][A-Z]{2}[0-9]$";
-            Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(cc);
-            if (matcher.matches()) {
-                isCCIdValid = true;
-            }
-        }
-        return isCCIdValid;
-    }
 
 }

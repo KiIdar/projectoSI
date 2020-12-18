@@ -28,23 +28,14 @@ public class ProjectoSI {
         
         String email="";
         String nome="";
+        String numTelemovel="";
+        String cc = "";
         
         v.isValidNome(nome);
-        System.out.println(v.isValidNome(nome));
-        
-        
-        //v.getPhoneInput(email);
-        //System.out.println("Email:"+v.isValidEmail(email));
-        
-        /*
-        String numTelemovel = JOptionPane.showInputDialog(null, "Escreva o seu número de telmóvel:");
         v.isValidNumTelemovel(numTelemovel);
-        System.out.println("Num:"+v.isValidNumTelemovel(numTelemovel));
-        
-        String cc = JOptionPane.showInputDialog(null, "Escreva o seu número do cartão cidadão");
         v.isValidCC(cc);
-        System.out.println("CC:"+v.isValidCC(cc));
-        */
+        v.isValidEmail(email);
+
 
         /**
          * ********************************************************
