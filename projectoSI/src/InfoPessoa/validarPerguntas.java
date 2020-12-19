@@ -17,14 +17,14 @@ import javax.swing.JOptionPane;
 public class validarPerguntas {
 
     public void isValidNome(String nome) {
-        nome = JOptionPane.showInputDialog(null, "Escreva o seu nome e o seu sobrenome:");
+        nome = JOptionPane.showInputDialog(null, "Escreva o seu nome completo:");
 
         String expression = "^[a-zA-Z\\u00C0-\\u017F´]+\\s+[a-zA-Z\\u00C0-\\u017F´]{0,}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         while (!pattern.matcher(nome).find()) {
 
             JOptionPane.showMessageDialog(null, "Nome inválido.\nTente novamente.");
-            nome = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu nome e o seu sobrenome:"));
+            nome = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu nome completo:"));
         }
         System.out.println("Nome final: "+nome);
     }
