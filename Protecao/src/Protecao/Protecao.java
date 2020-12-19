@@ -29,7 +29,7 @@ public class Protecao {
         System.out.println("MAC");
         MAC mac = new MAC();
         mac.getMAC();
-        System.out.println("---------------- NÃO FEITO ------------------------");
+        System.out.println("---------------- FEITO ------------------------");
         System.out.println("CPU");
         CPU cpu = new CPU();
         cpu.Info();
