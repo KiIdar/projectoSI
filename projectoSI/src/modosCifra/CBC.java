@@ -42,7 +42,6 @@ public class CBC {
 
         Scanner s = new Scanner(System.in);
 
-        //2.1.1
         //Creating a KeyGenerator object        
         String texto = JOptionPane.showInputDialog(null, "Nome do ficheiro com o texto:");
         String textoEncriptado = JOptionPane.showInputDialog(null, "Nome do ficheiro para o texto encriptado:");
