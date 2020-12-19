@@ -6,6 +6,7 @@ import InformacaoSistema.CPU;
 import InformacaoSistema.HostName;
 import InformacaoSistema.MAC;
 import java.io.IOException;
+import java.security.KeyPair;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,7 +90,30 @@ public class testar {
         assimétrica assimetrica = new assimétrica();
 
         try {
-            
+            //First generate a public/private key pair
+            KeyPair pair = assimetrica.generateKeyPair();
+            //KeyPair pair = getKeyPairFromKeyStore();
+
+            //Our secret message
+            String message1 = "rafael";
+            System.out.println("Mensagem secreta 1: " + message1);
+
+            String message2 = "fonseca";
+            System.out.println("Mensagem secreta 2: " + message2);
+
+            //Encrypt the message
+            String cipherText = assimetrica.encrypt(message1, pair.getPublic());
+            String cipherText2 = assimetrica.encrypt(message2, pair.getPublic());
+
+            System.out.println("Encripta a mensagem 1: " + cipherText);
+            System.out.println("Encripta a mensagem 2: " + cipherText2);
+
+            //Now decrypt it
+            String decipheredMessage = assimetrica.decrypt(cipherText, pair.getPrivate());
+            String decipheredMessage2 = assimetrica.decrypt(cipherText2, pair.getPrivate());
+
+            System.out.println("Desencripta com a chave privada 1: " + decipheredMessage);
+            System.out.println("Desencripta com a chave privada 2: " + decipheredMessage2);
         } catch (Exception ex) {
             Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
         }
