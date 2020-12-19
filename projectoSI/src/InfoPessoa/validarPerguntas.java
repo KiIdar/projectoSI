@@ -59,7 +59,7 @@ public class validarPerguntas {
     public void isValidCC(String cc) {
         cc = JOptionPane.showInputDialog(null, "Escreva o seu número do cartão cidadão final:");
 
-        String expression = "^9[1236][0-9]{7}|2[1-9][0-9]{7}$";
+        String expression = "^[0-9]{8}[ -]*[0-9][A-Z]{2}[0-9]$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         while (!pattern.matcher(cc).find()) {
 
