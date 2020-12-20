@@ -111,7 +111,7 @@ public class testar {
             MotherBoard motherboard = new MotherBoard();
 
             //cpu.Info();
-            mac.getIP();
+            //mac.getIP();
             //hostname.getHost();
             //motherboard.serial();
             //-------------------------------------------------------------------//

@@ -123,7 +123,7 @@ public class Protecao {
         HostName hostname = new HostName();
         MotherBoard motherboard = new MotherBoard();
         
-        mac.getIp();
+        mac.getHostIP();
         mac.getMac();
         hostname.getHost();
         motherboard.serial();
@@ -137,7 +137,7 @@ public class Protecao {
         
         
 
-        Licenca licenca = new Licenca(mac.getIp(),getMac, hostname.getHost(), motherboard.serial(),
+        Licenca licenca = new Licenca(mac.getHostIP(),getMac, hostname.getHost(), motherboard.serial(),
                 cpu.OSname(), cpu.OSversion(), null, null, null, "hi", "21423423423", null);
         
         System.out.println(licenca);
