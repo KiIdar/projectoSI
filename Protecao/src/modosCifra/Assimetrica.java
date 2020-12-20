@@ -18,11 +18,10 @@ import javax.crypto.Cipher;
 
 /**
  *
- * @author ASUS
+ * @author Utilizador
  */
-public class assimétrica {
-
-    public static KeyPair generateKeyPair() throws Exception {
+public class Assimetrica {
+     public static KeyPair generateKeyPair() throws Exception {
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(2048, new SecureRandom());
         KeyPair pair = generator.generateKeyPair();
@@ -34,7 +33,7 @@ public class assimétrica {
         //Generated with:
         //  keytool -genkeypair -alias mykey -storepass s3cr3t -keypass s3cr3t -keyalg RSA -keystore keystore.jks
 
-        InputStream ins = assimétrica.class.getResourceAsStream("/keystore.jks");
+        InputStream ins = Assimetrica.class.getResourceAsStream("/keystore.jks");
 
         KeyStore keyStore = KeyStore.getInstance("JCEKS");
         keyStore.load(ins, "s3cr3t".toCharArray());   //Keystore password

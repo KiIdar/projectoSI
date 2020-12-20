@@ -32,10 +32,9 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author ASUS
+ * @author Utilizador
  */
 public class CBC {
-
     private static String algoritmo = "AES";
 
     public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, FileNotFoundException, IOException, Exception {
@@ -176,4 +175,5 @@ public class CBC {
             System.out.println("ERRO AO DESINCRIPTAR:" + ex);
         }
     }
+    
 }
