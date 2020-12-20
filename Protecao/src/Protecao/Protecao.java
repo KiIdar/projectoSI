@@ -99,17 +99,9 @@ public class Protecao {
         validador.isValidCC(cc);
         validador.isValidEmail(email);
     }
-<<<<<<< Updated upstream
-    public void crearLicenca() throws IOException
-    {
-      Licenca licenca = new Licenca(null, null, null, null,null,null,null, null, null, "hi", "21423423423", null);
-      Ficheiros ficheiroControl = new Ficheiros();
-      ficheiroControl.escreverLicenca(licenca);
-      ficheiroControl.lerLicenca();
-=======
 
     public void criarLicenca() throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
-        Licenca licenca = new Licenca(null, null, null, "hi", "21423423423", null);
+        Licenca licenca = new Licenca(null,null,null,null,null, null,null, null, null, "hi", "21423423423", null);
 
         CBC cbc = new CBC();
         byte[] chave = cbc.generateKey();
@@ -118,8 +110,6 @@ public class Protecao {
         cbc.encrypt(licenca, chave, iv);
         
         System.out.println(cbc.decrypt(chave, iv).getNome() + " . " + cbc.decrypt(chave, iv).getNumTelemovel());
-
->>>>>>> Stashed changes
     }
     
     public void instanciarLicenca(){

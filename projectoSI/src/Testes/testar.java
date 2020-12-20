@@ -9,11 +9,8 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
-<<<<<<< Updated upstream
 import java.util.Arrays;
-=======
 import java.security.NoSuchAlgorithmException;
->>>>>>> Stashed changes
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,9 +115,6 @@ public class testar {
 
         //hostname.getHost();
         //motherboard.serial();
-
-=======
-            */
             //-------------------------------------------------------------------//
             
             
@@ -145,6 +139,5 @@ public class testar {
         } catch (BadPaddingException ex) {
             Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
         }
->>>>>>> Stashed changes
     }
 }
