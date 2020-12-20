@@ -8,10 +8,17 @@ import InformacaoSistema.MAC;
 import InformacaoSistema.MotherBoard;
 import Licenca.Licenca;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import modosCifra.Assimetrica;
+import modosCifra.CBC;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -23,12 +30,11 @@ import modosCifra.Assimetrica;
  * @author Utilizador
  */
 public class Protecao {
-    
-    public void testarAssimetrica()
-    {
+
+    public void testarAssimetrica() {
         Assimetrica assimetrica = new Assimetrica();
-        
-          try {
+
+        try {
             //First generate a public/private key pair
             KeyPair pair = assimetrica.generateKeyPair();
             //KeyPair pair = getKeyPairFromKeyStore();
@@ -58,7 +64,6 @@ public class Protecao {
         }
     }
 
-
     public void getPCInfo() throws IOException, InterruptedException {
         System.out.println("HOSTNAME");
         HostName hostName = new HostName();
@@ -80,27 +85,41 @@ public class Protecao {
         motherboard.serial();
         System.out.println("----------------------------------------");
     }
-    
-    public void validarPerguntas()
-    {
+
+    public void validarPerguntas() {
         ValidarPerguntas validador = new ValidarPerguntas();
-            
-            String email="";
-            String nome="";
-            String numTelemovel="";
-            String cc = "";
-            
-            validador.isValidNome(nome);
-            validador.isValidNumTelemovel(numTelemovel);
-            validador.isValidCC(cc);
-            validador.isValidEmail(email);
+
+        String email = "";
+        String nome = "";
+        String numTelemovel = "";
+        String cc = "";
+
+        validador.isValidNome(nome);
+        validador.isValidNumTelemovel(numTelemovel);
+        validador.isValidCC(cc);
+        validador.isValidEmail(email);
     }
+<<<<<<< Updated upstream
     public void crearLicenca() throws IOException
     {
       Licenca licenca = new Licenca(null, null, null, null,null,null,null, null, null, "hi", "21423423423", null);
       Ficheiros ficheiroControl = new Ficheiros();
       ficheiroControl.escreverLicenca(licenca);
       ficheiroControl.lerLicenca();
+=======
+
+    public void criarLicenca() throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
+        Licenca licenca = new Licenca(null, null, null, "hi", "21423423423", null);
+
+        CBC cbc = new CBC();
+        byte[] chave = cbc.generateKey();
+        byte[] iv = cbc.generateIV();
+        
+        cbc.encrypt(licenca, chave, iv);
+        
+        System.out.println(cbc.decrypt(chave, iv).getNome() + " . " + cbc.decrypt(chave, iv).getNumTelemovel());
+
+>>>>>>> Stashed changes
     }
     
     public void instanciarLicenca(){

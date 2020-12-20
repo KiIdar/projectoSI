@@ -5,11 +5,18 @@
  */
 package modosCifra;
 
+import Licenca.Licenca;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,9 +29,12 @@ import java.util.Random;
 import java.util.Scanner;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -35,9 +45,11 @@ import javax.swing.JOptionPane;
  * @author Utilizador
  */
 public class CBC {
-    private static String algoritmo = "AES";
 
-    public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, FileNotFoundException, IOException, Exception {
+    private static String algoritmo = "AES";
+    private static String algcript = "AES/CBC/PKCS5PADDING";
+
+    /*public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, FileNotFoundException, IOException, Exception {
 
         Scanner s = new Scanner(System.in);
 
@@ -95,7 +107,7 @@ public class CBC {
             byte[] keybytes = Files.readAllBytes(pathKeyFile);
 
             //passar para bytes
-            SecretKey key = new SecretKeySpec(keybytes,/* 0, keybytes.length,*/ alg);
+            SecretKey key = new SecretKeySpec(keybytes,/* 0, keybytes.length, alg);
 
             //Create cifra instancia DES
             Cipher encryptCipher = Cipher.getInstance(algcript);
@@ -139,7 +151,7 @@ public class CBC {
             Path pathKeyFile = Paths.get(chave);
             byte[] keybytes = Files.readAllBytes(pathKeyFile);
 
-            SecretKey key = new SecretKeySpec(keybytes/*, 0, keybytes.length*/, alg);
+            SecretKey key = new SecretKeySpec(keybytes/*, 0, keybytes.length, alg);
             System.out.println("key desincriptar:" + key);
 
             //Create cifra instancia DES
@@ -174,6 +186,57 @@ public class CBC {
         } catch (Exception ex) {
             System.out.println("ERRO AO DESINCRIPTAR:" + ex);
         }
+    }*/
+    public byte[] generateKey() throws NoSuchAlgorithmException {
+        //Creating a KeyGenerator object with Des
+        KeyGenerator keyGen;
+
+        keyGen = KeyGenerator.getInstance(algoritmo);
+        //Creating a Secret key using Key Generator 
+        SecretKey key = keyGen.generateKey();
+
+        //Get key to bytes
+        byte[] keybytes = key.getEncoded();
+
+        return keybytes;
     }
-    
-}
+
+    public byte[] generateIV() {
+        Random rand = new SecureRandom();
+        byte[] ivVector = new byte[16];
+        rand.nextBytes(ivVector);
+
+        IvParameterSpec iv = new IvParameterSpec(ivVector);
+        return iv.getIV();
+    }
+
+    public static void encrypt(Serializable object, byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException {
+        SecretKey key = new SecretKeySpec(chave, algoritmo);
+        // Create cipher
+        Cipher cipher = Cipher.getInstance(algcript);
+        
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
+
+        SealedObject sealedObject = new SealedObject(object, cipher);
+
+        FileOutputStream fos = new FileOutputStream("test.aes");
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+        CipherOutputStream cos = new CipherOutputStream(bos, cipher);
+        ObjectOutputStream oos = new ObjectOutputStream(cos);
+        oos.writeObject(sealedObject);
+        oos.close();
+    }
+
+    public static Licenca decrypt(byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
+        SecretKey key = new SecretKeySpec(chave, algoritmo);
+        Cipher cipher = Cipher.getInstance(algcript);
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+
+        CipherInputStream cipherInputSteam = new CipherInputStream(new BufferedInputStream(new FileInputStream("test.aes")), cipher);
+        ObjectInputStream inputStream = new ObjectInputStream(cipherInputSteam);
+        SealedObject sealedObject = (SealedObject) inputStream.readObject();
+        Licenca licenca = (Licenca) sealedObject.getObject(cipher);
+        return licenca;
+
+    }
+         }
