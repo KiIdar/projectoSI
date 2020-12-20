@@ -5,6 +5,7 @@
  */
 package Licenca;
 
+import java.net.InetAddress;
 import java.util.Date;
 
 /**
@@ -20,7 +21,7 @@ public class Licenca implements java.io.Serializable{
     private String nome;
     private String numTelemovel;
     private String cc;
-    private String ipAddress;
+    private InetAddress ipAddress;
     private String macAddress;
     private String hostName;
     private String serialMB;
@@ -32,7 +33,7 @@ public class Licenca implements java.io.Serializable{
     private Date dataValidade;
     private String fraseRandom;
 
-    public Licenca(String ipAddress, String macAddress,String hostName, String serialMB,
+    public Licenca(InetAddress ipAddress, String macAddress,String hostName, String serialMB,
             String nameCPU, String versaoCPU, byte[] chavePublica, String nomeProjecto, String email, String nome, String numTelemovel, String cc) {
         this.chavePublica = chavePublica;
         this.nomeProjecto = nomeProjecto;

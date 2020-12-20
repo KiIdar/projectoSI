@@ -8,10 +8,13 @@ import InformacaoSistema.MAC;
 import InformacaoSistema.MotherBoard;
 import Licenca.Licenca;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -101,23 +104,44 @@ public class Protecao {
     }
 
     public void criarLicenca() throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
-        Licenca licenca = new Licenca(null,null,null,null,null, null,null, null, null, "hi", "21423423423", null);
+        Licenca licenca = new Licenca(null, null, null, null, null, null, null, null, null, "hi", "21423423423", null);
 
         CBC cbc = new CBC();
         byte[] chave = cbc.generateKey();
         byte[] iv = cbc.generateIV();
-        
+
         cbc.encrypt(licenca, chave, iv);
-        
+
         System.out.println(cbc.decrypt(chave, iv).getNome() + " . " + cbc.decrypt(chave, iv).getNumTelemovel());
     }
-    
-    public void instanciarLicenca(){
-        //String ipAddress, String macAddress,String hostName, String serialMB, String nameCPU, String versaoCPU, byte[] chavePublica, String nomeProjecto, String email, String nome, String numTelemovel, String cc
-        
+
+    public void instanciarLicenca() throws Exception {
+        //byte[] chavePublica, String nomeProjecto, String email, String nome, String numTelemovel, String cc
+
+        CPU cpu = new CPU();
         MAC mac = new MAC();
+        HostName hostname = new HostName();
+        MotherBoard motherboard = new MotherBoard();
+        
+        mac.getIp();
+        mac.getMac();
+        hostname.getHost();
+        motherboard.serial();
+        cpu.Info();
+        
+
+        // string to byte[]
+        byte[] bytes = mac.getMAC().getBytes();
+        // convert byte[] to string
+        String getMac = new String(bytes, StandardCharsets.UTF_8);
         
         
-        Licenca licenca = new Licenca(null, null, null, null,null,null,null, null, null, "hi", "21423423423", null);
+
+        Licenca licenca = new Licenca(mac.getIp(),getMac, hostname.getHost(), motherboard.serial(),
+                cpu.OSname(), cpu.OSversion(), null, null, null, "hi", "21423423423", null);
+        
+        System.out.println(licenca);
     }
+    
+
 }

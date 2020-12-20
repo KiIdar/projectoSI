@@ -6,11 +6,14 @@ import InformacaoSistema.HostName;
 import InformacaoSistema.MAC;
 import InformacaoSistema.MotherBoard;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.util.Arrays;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,12 +33,12 @@ public class testar {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String[] args) {
 
         try {
             Scanner reader = new Scanner(System.in);
             Protecao protecao = new Protecao();
-            
+
             //Perguntas utilizador
             /*
             validarPerguntas v = new validarPerguntas();
@@ -49,7 +52,7 @@ public class testar {
             v.isValidNumTelemovel(numTelemovel);
             v.isValidCC(cc);
             v.isValidEmail(email);
-            */
+             */
             /**
              * ********************************************************
              */
@@ -91,52 +94,46 @@ public class testar {
             System.out.println(first + " " + operator + " " + second + " = " + result);*/
             //Biblioteca adicionada e testtada
             /*
-            Protecao test = new Protecao();
-            test.getPCInfo();
-<<<<<<< Updated upstream
-         */
-        //-------------------------------------------------------------------//
-        //Testar Cifra assimetrica
-        //protecao.testarAssimetrica();
-        //Testar Validar
-        //protecao.validarPerguntas();
-        //escrever licença e ler
-        //protecao.crearLicenca();
-        //protecao.instanciarLicenca();
-        
-        //Testar infoSistema
-        CPU cpu = new CPU();
-        MAC mac = new MAC();
-        HostName hostname = new HostName();
-        MotherBoard motherboard = new MotherBoard();
-        
-        //cpu.Info();
-        mac.getIp();
-
-        //hostname.getHost();
-        //motherboard.serial();
+            protecao.getPCInfo();
+             */
             //-------------------------------------------------------------------//
-            
-            
             //Testar Cifra assimetrica
             //protecao.testarAssimetrica();
-            
+            //Testar Validar
+            //protecao.validarPerguntas();
+            //escrever licença e ler
+            //protecao.crearLicenca();
+            //protecao.instanciarLicenca();
+            //Testar infoSistema
+            CPU cpu = new CPU();
+            MAC mac = new MAC();
+            HostName hostname = new HostName();
+            MotherBoard motherboard = new MotherBoard();
+
+            //cpu.Info();
+            mac.getIP();
+            //hostname.getHost();
+            //motherboard.serial();
+            //-------------------------------------------------------------------//
+            //Testar Cifra assimetrica
+            //protecao.testarAssimetrica();
             //Tesrar Validar
             //protecao.validarPerguntas();
-            
             //escrever licença e ler
-            protecao.criarLicenca();
-        } catch (NoSuchPaddingException ex) {
-            Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
+            //protecao.instanciarLicenca();
+
+            //Data atual
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+
+            //Data final
+            LocalDateTime a = now.plusYears(1);
+
+            System.out.println("Data final: " + a);
+            System.out.println("Data inicial: " + now);
+            System.out.println("Igual?" + now.plusYears(1).isEqual(a));
+
+        } catch (Exception ex) {
             Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

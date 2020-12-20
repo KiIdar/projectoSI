@@ -5,22 +5,28 @@
  */
 package InformacaoSistema;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Utilizador
  */
 public class MAC {
-    InetAddress ip;
+
     byte[] mac;
+    String hostIP;
 
     public String getMAC() {
         try {
-
-            ip = InetAddress.getLocalHost();
+            InetAddress ip = InetAddress.getLocalHost();
             System.out.println("Current IP address : " + ip.getHostAddress());
+            
+             hostIP = ip.getHostAddress() ;
 
             NetworkInterface network = NetworkInterface.getByInetAddress(ip);
 
@@ -34,28 +40,34 @@ public class MAC {
             }
             System.out.println(sb.toString());
             return sb.toString();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
-
-    public InetAddress getIp() {
-        System.out.println("Ip:"+ip);
-        return ip;
-    }
-
-    public void setIp(InetAddress ip) {
-        this.ip = ip;
-    }
+    
+    /*public String getIP() throws UnknownHostException{
+        hostIP = Inet4Address.getLocalHost().getHostAddress();
+        return hostIP;
+    } */
 
     public byte[] getMac() {
-        System.out.println("MAC:"+mac);
         return mac;
     }
 
     public void setMac(byte[] mac) {
         this.mac = mac;
     }
+
+    public String getHostIP() {
+        return hostIP;
+    }
+
+    public void setHostIP(String hostIP) {
+        this.hostIP = hostIP;
+    }
+
+    
+
+    
 }
