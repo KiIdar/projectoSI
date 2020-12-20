@@ -5,18 +5,15 @@
  */
 package InfoPessoa;
 
-import java.util.Scanner;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 /**
  *
- * @author ASUS
+ * @author Utilizador
  */
-public class validarPerguntas {
-
-    public void isValidNome(String nome) {
+public class ValidarPerguntas {
+     public void isValidNome(String nome) {
         nome = JOptionPane.showInputDialog(null, "Escreva o seu nome completo:");
 
         String expression = "^[a-zA-Z\\u00C0-\\u017F´]+\\s+[a-zA-Z\\u00C0-\\u017F´]{0,}$";
@@ -68,6 +65,4 @@ public class validarPerguntas {
         }
         System.out.println("número do cartão cidadão final: "+cc);
     }
-
-
 }
