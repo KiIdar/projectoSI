@@ -14,6 +14,7 @@ import java.net.NetworkInterface;
  */
 public class MAC {
     InetAddress ip;
+    byte[] mac;
 
     public String getMAC() {
         try {
@@ -23,7 +24,7 @@ public class MAC {
 
             NetworkInterface network = NetworkInterface.getByInetAddress(ip);
 
-            byte[] mac = network.getHardwareAddress();
+            mac = network.getHardwareAddress();
 
             System.out.print("Current MAC address : ");
 
@@ -38,5 +39,23 @@ public class MAC {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public InetAddress getIp() {
+        System.out.println("Ip:"+ip);
+        return ip;
+    }
+
+    public void setIp(InetAddress ip) {
+        this.ip = ip;
+    }
+
+    public byte[] getMac() {
+        System.out.println("MAC:"+mac);
+        return mac;
+    }
+
+    public void setMac(byte[] mac) {
+        this.mac = mac;
     }
 }

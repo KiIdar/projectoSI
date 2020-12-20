@@ -20,19 +20,32 @@ public class Licenca implements java.io.Serializable{
     private String nome;
     private String numTelemovel;
     private String cc;
+    private String ipAddress;
+    private String macAddress;
+    private String hostName;
+    private String serialMB;
+    private String nameCPU;
+    private String versaoCPU;
 
     //variaveis DEPOIS de se tornar uma licença oficial
     private Date dataInicio;
     private Date dataValidade;
     private String fraseRandom;
 
-    public Licenca(byte[] chavePublica, String nomeProjecto, String email, String nome, String numTelemovel, String cc) {
+    public Licenca(String ipAddress, String macAddress,String hostName, String serialMB,
+            String nameCPU, String versaoCPU, byte[] chavePublica, String nomeProjecto, String email, String nome, String numTelemovel, String cc) {
         this.chavePublica = chavePublica;
         this.nomeProjecto = nomeProjecto;
         this.email = email;
         this.nome = nome;
         this.numTelemovel = numTelemovel;
         this.cc = cc;
+        this.ipAddress = ipAddress;
+        this.macAddress = macAddress;
+        this.hostName = hostName;
+        this.serialMB=serialMB;
+        this.nameCPU = nameCPU;
+        this.versaoCPU = versaoCPU;
     }
 
     public byte[] getChavePublica() {

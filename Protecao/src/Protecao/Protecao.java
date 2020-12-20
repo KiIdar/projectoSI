@@ -97,9 +97,18 @@ public class Protecao {
     }
     public void crearLicenca() throws IOException
     {
-      Licenca licenca = new Licenca(null, null, null, "hi", "21423423423", null);
+      Licenca licenca = new Licenca(null, null, null, null,null,null,null, null, null, "hi", "21423423423", null);
       Ficheiros ficheiroControl = new Ficheiros();
       ficheiroControl.escreverLicenca(licenca);
       ficheiroControl.lerLicenca();
+    }
+    
+    public void instanciarLicenca(){
+        //String ipAddress, String macAddress,String hostName, String serialMB, String nameCPU, String versaoCPU, byte[] chavePublica, String nomeProjecto, String email, String nome, String numTelemovel, String cc
+        
+        MAC mac = new MAC();
+        
+        
+        Licenca licenca = new Licenca(null, null, null, null,null,null,null, null, null, "hi", "21423423423", null);
     }
 }

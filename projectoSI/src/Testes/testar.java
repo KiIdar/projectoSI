@@ -4,8 +4,10 @@ import Protecao.Protecao;
 import InformacaoSistema.CPU;
 import InformacaoSistema.HostName;
 import InformacaoSistema.MAC;
+import InformacaoSistema.MotherBoard;
 import java.io.IOException;
 import java.security.KeyPair;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,15 +88,25 @@ public class testar {
             test.getPCInfo();
          */
         //-------------------------------------------------------------------//
-        
-        
         //Testar Cifra assimetrica
-       //protecao.testarAssimetrica();
-       
-       //Tesrar Validar
-       //protecao.validarPerguntas();
-       
-       //escrever licença e ler
-       protecao.crearLicenca();
+        //protecao.testarAssimetrica();
+        //Testar Validar
+        //protecao.validarPerguntas();
+        //escrever licença e ler
+        //protecao.crearLicenca();
+        //protecao.instanciarLicenca();
+        
+        //Testar infoSistema
+        CPU cpu = new CPU();
+        MAC mac = new MAC();
+        HostName hostname = new HostName();
+        MotherBoard motherboard = new MotherBoard();
+        
+        //cpu.Info();
+        mac.getIp();
+
+        //hostname.getHost();
+        //motherboard.serial();
+
     }
 }
