@@ -1,10 +1,11 @@
 package Testes;
 
-import Protecao.Protecao;
+
 import InformacaoSistema.CPU;
 import InformacaoSistema.HostName;
 import InformacaoSistema.MAC;
 import InformacaoSistema.MotherBoard;
+import Protecao.Protecao;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.security.InvalidAlgorithmParameterException;
@@ -120,7 +121,7 @@ public class testar {
             //Tesrar Validar
             //protecao.validarPerguntas();
             //escrever licença e ler
-            //protecao.instanciarLicenca();
+            protecao.instanciarLicenca();
 
             //Data atual
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
