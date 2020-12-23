@@ -121,7 +121,8 @@ public class testar {
             //Tesrar Validar
             //protecao.validarPerguntas();
             //escrever licença e ler
-            protecao.instanciarLicenca();
+            //protecao.instanciarLicenca();
+            protecao.criarLicenca();
 
             //Data atual
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");

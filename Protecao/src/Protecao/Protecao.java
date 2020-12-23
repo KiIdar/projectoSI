@@ -134,8 +134,6 @@ public class Protecao {
         byte[] bytes = mac.getMAC().getBytes();
         // convert byte[] to string
         String getMac = new String(bytes, StandardCharsets.UTF_8);
-        
-        
 
         Licenca licenca = new Licenca(mac.getHostIP(),getMac, hostname.getHost(), motherboard.serial(),
             cpu.OSname(), cpu.OSversion(), null, null, null, "hi", "21423423423", null);
