@@ -1,6 +1,6 @@
 package Testes;
 
-
+import CartaoCidadao.dados;
 import InformacaoSistema.CPU;
 import InformacaoSistema.HostName;
 import InformacaoSistema.MAC;
@@ -122,18 +122,11 @@ public class testar {
             //protecao.validarPerguntas();
             //escrever licença e ler
             //protecao.instanciarLicenca();
-            protecao.criarLicenca();
+            //protecao.criarLicenca();
+            CartaoCidadao.dados e = new dados();
 
-            //Data atual
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-            LocalDateTime now = LocalDateTime.now();
-
-            //Data final
-            LocalDateTime a = now.plusYears(1);
-
-            System.out.println("Data final: " + a);
-            System.out.println("Data inicial: " + now);
-            System.out.println("Igual?" + now.plusYears(1).isEqual(a));
+            e.providers();
+            e.provider();
 
         } catch (Exception ex) {
             Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
