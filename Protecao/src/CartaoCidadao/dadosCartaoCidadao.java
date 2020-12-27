@@ -1,9 +1,11 @@
+package CartaoCidadao;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CartaoCidadao;
+
 
 import java.security.KeyStore;
 import java.security.Provider;
@@ -15,7 +17,7 @@ import java.util.Enumeration;
  *
  * @author ASUS
  */
-public class dados {
+public class dadosCartaoCidadao {
        //Mostra o nome da pessoa do cc
 
     public void providers(){
@@ -46,6 +48,12 @@ public class dados {
         System.out.println("Nome:"+nome[0]);
 
         return null;
+    }
+    
+     public static void main(String[] args) throws Exception {
+        dadosCartaoCidadao d = new dadosCartaoCidadao();
+        d.providers();
+        d.provider();
     }
 
 }

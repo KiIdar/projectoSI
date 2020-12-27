@@ -1,6 +1,5 @@
 package Testes;
 
-import CartaoCidadao.dados;
 import InformacaoSistema.CPU;
 import InformacaoSistema.HostName;
 import InformacaoSistema.MAC;
@@ -123,10 +122,7 @@ public class testar {
             //escrever licença e ler
             //protecao.instanciarLicenca();
             //protecao.criarLicenca();
-            CartaoCidadao.dados e = new dados();
-
-            e.providers();
-            e.provider();
+           
 
         } catch (Exception ex) {
             Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
