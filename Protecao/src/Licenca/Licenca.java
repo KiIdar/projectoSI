@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author Utilizador
  */
-public class Licenca implements java.io.Serializable{
+public class Licenca implements java.io.Serializable {
 
     private byte[] chavePublica;
     //info do PC ainda tenho que ver qual queremos
@@ -25,16 +25,17 @@ public class Licenca implements java.io.Serializable{
     private String macAddress;
     private String hostName;
     private String serialMB;
-    private String nameCPU;
-    private String versaoCPU;
+    private String serialCPU;
+    private String serialDisk;
 
     //variaveis DEPOIS de se tornar uma licença oficial
     private Date dataInicio;
     private Date dataValidade;
     private String fraseRandom;
 
-    public Licenca(String ipAddress, String macAddress,String hostName, String serialMB,
-            String nameCPU, String versaoCPU, byte[] chavePublica, String nomeProjecto, String email, String nome, String numTelemovel, String cc) {
+    public Licenca(String ipAddress, String macAddress, String hostName, String serialMB,
+            String serialCPU, String serialDisk, byte[] chavePublica, String nomeProjecto,
+            String email, String nome, String numTelemovel, String cc) {
         this.chavePublica = chavePublica;
         this.nomeProjecto = nomeProjecto;
         this.email = email;
@@ -44,9 +45,9 @@ public class Licenca implements java.io.Serializable{
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
         this.hostName = hostName;
-        this.serialMB=serialMB;
-        this.nameCPU = nameCPU;
-        this.versaoCPU = versaoCPU;
+        this.serialMB = serialMB;
+        this.serialCPU = serialCPU;
+        this.serialDisk = serialDisk;
     }
 
     public byte[] getChavePublica() {
@@ -120,7 +121,5 @@ public class Licenca implements java.io.Serializable{
     public void setFraseRandom(String fraseRandom) {
         this.fraseRandom = fraseRandom;
     }
-    
-    
-    
+
 }

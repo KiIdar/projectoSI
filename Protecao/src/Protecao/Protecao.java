@@ -1,11 +1,12 @@
 package Protecao;
 
-import Ficheiros.Ficheiros;
 import InfoPessoa.ValidarPerguntas;
-import InformacaoSistema.CPU;
-import InformacaoSistema.HostName;
-import InformacaoSistema.MAC;
-import InformacaoSistema.MotherBoard;
+import InformacaoSistema.DiscoRigido;
+import InformacaoSistema.cpu;
+import InformacaoSistema.hostName;
+import InformacaoSistema.getIp;
+import InformacaoSistema.getMac;
+import InformacaoSistema.motherBoard;
 import Licenca.Licenca;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,15 +24,6 @@ import javax.crypto.NoSuchPaddingException;
 import modosCifra.Assimetrica;
 import modosCifra.CBC;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author Utilizador
- */
 public class Protecao {
 
     public void testarAssimetrica() {
@@ -68,24 +60,23 @@ public class Protecao {
     }
 
     public void getPCInfo() throws IOException, InterruptedException {
-        System.out.println("HOSTNAME");
-        HostName hostName = new HostName();
-        hostName.getHost();
+
+        hostName hostName = new hostName();
+        System.out.println("HOSTNAME:" + hostName.getHost());
         System.out.println("--------------- FEITO -------------------------");
-        System.out.println("MAC");
-        MAC mac = new MAC();
-        mac.getMAC();
+        getIp ip = new getIp();
+        System.out.println("IP: " + ip.getIp());
+        getMac mac = new getMac();
+        System.out.println("MAC: " + mac.getMac());
         System.out.println("---------------- FEITO ------------------------");
-        System.out.println("CPU");
-        CPU cpu = new CPU();
-        cpu.Info();
+        cpu cpu = new cpu();
+        System.out.println("CPU: " + cpu.getCPUSerial());
+        System.out.println("----------------- NÃO SEI SE ESTÁ FEITO -----------------------");
+        DiscoRigido dr = new DiscoRigido();
+        System.out.println("DISK: " + dr.getHardDiskSerialNumber("C"));
         System.out.println("----------------- FEITO -----------------------");
-        System.out.println("DISK");
-        System.out.println(cpu.DiskInfo());
-        System.out.println("----------------- FEITO -----------------------");
-        System.out.println("MOTHERBOARD");
-        MotherBoard motherboard = new MotherBoard();
-        motherboard.serial();
+        motherBoard mb = new motherBoard();
+        System.out.println("MOTHERBOARD: " + mb.getMotherboardSN());
         System.out.println("----------------------------------------");
     }
 
@@ -116,30 +107,26 @@ public class Protecao {
     }
 
     public void instanciarLicenca() throws Exception {
-        //byte[] chavePublica, String nomeProjecto, String email, String nome, String numTelemovel, String cc
 
-        CPU cpu = new CPU();
-        MAC mac = new MAC();
-        HostName hostname = new HostName();
-        MotherBoard motherboard = new MotherBoard();
-        
-        mac.getHostIP();
-        mac.getMac();
-        hostname.getHost();
-        motherboard.serial();
-        cpu.Info();
-        
+        hostName hn = new hostName();
+        getMac mac = new getMac();
+        getIp ip = new getIp();
+        cpu cpu = new cpu();
+        DiscoRigido dr = new DiscoRigido();
+        motherBoard mb = new motherBoard();
 
-        // string to byte[]
-        byte[] bytes = mac.getMAC().getBytes();
-        // convert byte[] to string
-        String getMac = new String(bytes, StandardCharsets.UTF_8);
+        Licenca licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
+                cpu.getCPUSerial(), dr.getHardDiskSerialNumber("C"), null, null, null, "hi", "21423423423", null);
 
-        Licenca licenca = new Licenca(mac.getHostIP(),getMac, hostname.getHost(), motherboard.serial(),
-            cpu.OSname(), cpu.OSversion(), null, null, null, "hi", "21423423423", null);
-        
-        System.out.println(licenca);
+        System.out.println("Licenca: "+licenca);
+
     }
-    
+
+    //Teste
+    public static void main(String[] args) throws IOException, InterruptedException, Exception {
+        Protecao p = new Protecao();
+        //p.getPCInfo();
+        p.instanciarLicenca();
+    }
 
 }

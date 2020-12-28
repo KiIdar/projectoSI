@@ -11,18 +11,22 @@ import java.net.InetAddress;
  *
  * @author Utilizador
  */
-public class HostName {
-    String hostname = "Teste";
+public class hostName {
+    String hostname = "";
 
-    public String getHost() {
+    public final String getHost() {
         InetAddress addr;
         try {
             addr = InetAddress.getLocalHost();
             hostname = addr.getHostName();
-            System.out.println("HostName: "+hostname);
         } catch (Exception ex) {
             System.out.println("Erro:"+ex);
         }
         return hostname;
+    }
+    
+    public static void main(String[] args) {
+        hostName hn = new hostName();
+        System.out.println("HostName: " + hn.getHost() );
     }
 }

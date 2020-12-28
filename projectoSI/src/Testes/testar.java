@@ -1,28 +1,8 @@
 package Testes;
 
-import InformacaoSistema.CPU;
-import InformacaoSistema.HostName;
-import InformacaoSistema.MAC;
-import InformacaoSistema.MotherBoard;
 import Protecao.Protecao;
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.util.Arrays;
-import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,14 +13,13 @@ public class testar {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-        try {
-            Scanner reader = new Scanner(System.in);
-            Protecao protecao = new Protecao();
+        Scanner reader = new Scanner(System.in);
+        Protecao protecao = new Protecao();
 
-            //Perguntas utilizador
-            /*
+        //Perguntas utilizador
+        /*
             validarPerguntas v = new validarPerguntas();
             
             String email="";
@@ -52,11 +31,11 @@ public class testar {
             v.isValidNumTelemovel(numTelemovel);
             v.isValidCC(cc);
             v.isValidEmail(email);
-             */
-            /**
-             * ********************************************************
-             */
-            /*
+         */
+        /**
+         * ********************************************************
+         */
+        /*
             System.out.print("Enter two numbers: ");
             
             // nextDouble() reads the next double from the keyboard
@@ -92,40 +71,25 @@ public class testar {
             }
             
             System.out.println(first + " " + operator + " " + second + " = " + result);*/
-            //Biblioteca adicionada e testtada
-            /*
-            protecao.getPCInfo();
-             */
-            //-------------------------------------------------------------------//
-            //Testar Cifra assimetrica
-            //protecao.testarAssimetrica();
-            //Testar Validar
-            //protecao.validarPerguntas();
-            //escrever licença e ler
-            //protecao.crearLicenca();
-            //protecao.instanciarLicenca();
-            //Testar infoSistema
-            CPU cpu = new CPU();
-            MAC mac = new MAC();
-            HostName hostname = new HostName();
-            MotherBoard motherboard = new MotherBoard();
+        //Biblioteca adicionada e testtada
+        protecao.getPCInfo();
 
-            //cpu.Info();
-            //mac.getIP();
-            //hostname.getHost();
-            //motherboard.serial();
-            //-------------------------------------------------------------------//
-            //Testar Cifra assimetrica
-            //protecao.testarAssimetrica();
-            //Tesrar Validar
-            //protecao.validarPerguntas();
-            //escrever licença e ler
-            //protecao.instanciarLicenca();
-            //protecao.criarLicenca();
-           
-
-        } catch (Exception ex) {
-            Logger.getLogger(testar.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //-------------------------------------------------------------------//
+        //Testar Cifra assimetrica
+        //protecao.testarAssimetrica();
+        //Testar Validar
+        //protecao.validarPerguntas();
+        //escrever licença e ler
+        //protecao.crearLicenca();
+        //protecao.instanciarLicenca();
+        //Testar infoSistema
+        //-------------------------------------------------------------------//
+        //Testar Cifra assimetrica
+        //protecao.testarAssimetrica();
+        //Tesrar Validar
+        //protecao.validarPerguntas();
+        //escrever licença e ler
+        //protecao.instanciarLicenca();
+        //protecao.criarLicenca();
     }
 }
