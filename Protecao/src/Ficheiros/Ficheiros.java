@@ -25,10 +25,11 @@ import java.util.logging.Logger;
  */
 public class Ficheiros {
 
-    public static void escreverFicheiro(String nomePasta, byte[] dados) {
+    public void escreverFicheiro(String nomePasta, byte[] dados) {
         System.out.println("Pasta com texto: " + dados);
         try {
             File myObj = new File(nomePasta);
+            myObj.getParentFile().mkdirs();
             OutputStream os = new FileOutputStream(myObj);
 
             if (myObj.exists()) {
@@ -44,8 +45,9 @@ public class Ficheiros {
             e.printStackTrace();
         }
     }
+    
 
-    public static byte[] lerFicheiro(String nomePasta) {
+    public byte[] lerFicheiro(String nomePasta) {
         byte[] inputfileBytes = null;
         try {
             FileInputStream fis = new FileInputStream(nomePasta);
@@ -59,7 +61,7 @@ public class Ficheiros {
         return inputfileBytes;
     }
 
-    public void escreverLicenca(Licenca licenca) throws IOException {
+    /*public void escreverLicenca(Licenca licenca) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         ObjectOutputStream oos = new ObjectOutputStream(buffer);
@@ -70,9 +72,9 @@ public class Ficheiros {
 
         byte[] rawData = buffer.toByteArray();
         escreverFicheiro("test.txt", rawData);
-    }
+    }*/
 
-    public void lerLicenca() throws IOException {
+    /*public void lerLicenca() throws IOException {
         Licenca licenca = null;
         ByteArrayInputStream bis = new ByteArrayInputStream(lerFicheiro("test.txt"));
         ObjectInput in = null;
@@ -94,5 +96,5 @@ public class Ficheiros {
         }
         
         System.out.println(licenca.getNome() + " - " + licenca.getNumTelemovel());
-    }
+    }*/
 }

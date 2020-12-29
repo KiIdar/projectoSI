@@ -1,8 +1,11 @@
 package Testes;
 
+import Licenca.Licenca;
 import Protecao.Protecao;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,7 +16,7 @@ public class testar {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, Exception {
 
         Scanner reader = new Scanner(System.in);
         Protecao protecao = new Protecao();
@@ -72,8 +75,7 @@ public class testar {
             
             System.out.println(first + " " + operator + " " + second + " = " + result);*/
         //Biblioteca adicionada e testtada
-        protecao.getPCInfo();
-
+        //protecao.getPCInfo();
         //-------------------------------------------------------------------//
         //Testar Cifra assimetrica
         //protecao.testarAssimetrica();
@@ -89,7 +91,9 @@ public class testar {
         //Tesrar Validar
         //protecao.validarPerguntas();
         //escrever licença e ler
-        //protecao.instanciarLicenca();
+        protecao.instanciarLicenca();
         //protecao.criarLicenca();
+
+        //protecao.testarAssimetrica();
     }
 }

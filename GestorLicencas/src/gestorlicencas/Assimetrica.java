@@ -3,20 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modosCifra;
+package gestorlicencas;
 
-import Ficheiros.Ficheiros;
 import java.io.InputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -27,20 +25,19 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
 /**
  *
  * @author Utilizador
  */
 public class Assimetrica {
 
-    public KeyPair generateKeyPair() throws Exception {
+    /*public static KeyPair generateKeyPair() throws Exception {
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(2048, new SecureRandom());
         KeyPair pair = generator.generateKeyPair();
 
         return pair;
-    }
+    }*/
 
     public KeyPair getKeyPair() throws NoSuchAlgorithmException, InvalidKeySpecException {
         Ficheiros ficheiro = new Ficheiros();
@@ -48,18 +45,11 @@ public class Assimetrica {
         PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(ficheiro.lerFicheiro("chave privada.txt")));
         PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(ficheiro.lerFicheiro("chave publica.txt")));
         KeyPair newKeyPair = new KeyPair(publicKey, privateKey);
-
+        
         return newKeyPair;
     }
 
-    public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        Ficheiros ficheiro = new Ficheiros();
-        KeyFactory kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
-        PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(ficheiro.lerFicheiro("chave publicaGestor.txt")));
-        return publicKey;
-    }
-
-    public KeyPair getKeyPairFromKeyStore() throws Exception {
+    public static KeyPair getKeyPairFromKeyStore() throws Exception {
         //Generated with:
         //  keytool -genkeypair -alias mykey -storepass s3cr3t -keypass s3cr3t -keyalg RSA -keystore keystore.jks
 
@@ -80,28 +70,7 @@ public class Assimetrica {
         return new KeyPair(publicKey, privateKey);
     }
 
-    /*public String encrypt(String plainText, PublicKey publicKey) throws Exception {
-        Cipher encryptCipher = Cipher.getInstance("RSA");
-        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-        byte[] cipherText = encryptCipher.doFinal(plainText.getBytes(UTF_8));
-        //byte[] cipherText = encryptCipher.doFinal(plainText);
-        System.out.println("cyphetExte: " + cipherText);
-
-        return Base64.getEncoder().encodeToString(cipherText);
-        //return cipherText;
-    }
-
-    public String decrypt(String cipherText, PrivateKey privateKey) throws Exception {
-        byte[] bytes = Base64.getDecoder().decode(cipherText);
-
-        Cipher decriptCipher = Cipher.getInstance("RSA");
-        decriptCipher.init(Cipher.DECRYPT_MODE, privateKey);
-
-        return new String(decriptCipher.doFinal(bytes), UTF_8);
-    }*/
-
-    public static byte[] encrypt(byte[] byteText, PublicKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, NoSuchAlgorithmException {
+     public static byte[] encrypt(byte[] byteText, PublicKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, NoSuchAlgorithmException {
         Cipher decriptCipher = Cipher.getInstance("RSA");
         decriptCipher.init(Cipher.ENCRYPT_MODE, key);
         byte[] cipherBytes = decriptCipher.doFinal(byteText);
@@ -126,5 +95,4 @@ public class Assimetrica {
         }
         return plainText;
     }
-
 }

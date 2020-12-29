@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modosCifra;
+package gestorlicencas;
 
 import Licenca.Licenca;
 import java.io.BufferedInputStream;
@@ -39,6 +39,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
+import Licenca.Licenca;
 
 /**
  *
@@ -210,7 +211,7 @@ public class CBC {
         return iv.getIV();
     }
 
-    public static void encrypt(Serializable object, byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException {
+    public void encrypt(Serializable object, byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException {
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         // Create cipher
         Cipher cipher = Cipher.getInstance(algcript);
@@ -229,14 +230,17 @@ public class CBC {
         oos.close();
     }
 
-    public static Licenca decrypt(byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
+    public Licenca decrypt(byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         Cipher cipher = Cipher.getInstance(algcript);
+
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+
 
         CipherInputStream cipherInputSteam = new CipherInputStream(new BufferedInputStream(new FileInputStream("ToSend\\licenca.aes")), cipher);
         ObjectInputStream inputStream = new ObjectInputStream(cipherInputSteam);
         SealedObject sealedObject = (SealedObject) inputStream.readObject();
+        Licenca test = new Licenca(null, null, null, null, null, null, null, null, null, null, null, null);
         Licenca licenca = (Licenca) sealedObject.getObject(cipher);
         return licenca;
 

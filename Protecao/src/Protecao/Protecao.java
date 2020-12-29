@@ -1,5 +1,6 @@
 package Protecao;
 
+import Ficheiros.Ficheiros;
 import InfoPessoa.ValidarPerguntas;
 import InformacaoSistema.DiscoRigido;
 import InformacaoSistema.cpu;
@@ -12,8 +13,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
@@ -26,38 +33,48 @@ import modosCifra.CBC;
 
 public class Protecao {
 
-    public void testarAssimetrica() {
+   /* public void testarAssimetrica() {
         Assimetrica assimetrica = new Assimetrica();
-
+        Ficheiros ficheiro = new Ficheiros();
         try {
             //First generate a public/private key pair
             KeyPair pair = assimetrica.generateKeyPair();
             //KeyPair pair = getKeyPairFromKeyStore();
 
             //Our secret message
-            String message1 = "rafael";
+            String message1 = "Ola do outro lado!";
             System.out.println("Mensagem secreta 1: " + message1);
 
             String message2 = "fonseca";
             System.out.println("Mensagem secreta 2: " + message2);
 
+            //escrever as chaves num ficheiro
+            //ficheiro.escreverFicheiro("chave publica.txt", pair.getPublic().getEncoded());
+            //ficheiro.escreverFicheiro("chave privada.txt", pair.getPrivate().getEncoded());
+            //tentar voltar ter as chaves
+            //KeyFactory kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
+            //PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(ficheiro.lerFicheiro("chave privada.txt")));
+            //PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(ficheiro.lerFicheiro("chave publica.txt")));
+            //KeyPair newKeyPair = new KeyPair(publicKey, privateKey);
             //Encrypt the message
-            String cipherText = assimetrica.encrypt(message1, pair.getPublic());
+            String cipherText = assimetrica.encrypt(message1, assimetrica.getPublicKey());
             String cipherText2 = assimetrica.encrypt(message2, pair.getPublic());
 
             System.out.println("Encripta a mensagem 1: " + cipherText);
             System.out.println("Encripta a mensagem 2: " + cipherText2);
 
+            //escrever ficheiro com a encriptada para passar ao outro
+            //ficheiro.escreverFicheiro("mensagem.txt", cipherText.getBytes());
             //Now decrypt it
-            String decipheredMessage = assimetrica.decrypt(cipherText, pair.getPrivate());
+            //String decipheredMessage = assimetrica.decrypt(cipherText, newKeyPair.getPrivate());
             String decipheredMessage2 = assimetrica.decrypt(cipherText2, pair.getPrivate());
 
-            System.out.println("Desencripta com a chave privada 1: " + decipheredMessage);
+            //System.out.println("Desencripta com a chave privada 1: " + decipheredMessage);
             System.out.println("Desencripta com a chave privada 2: " + decipheredMessage2);
         } catch (Exception ex) {
             Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     public void getPCInfo() throws IOException, InterruptedException {
 
@@ -94,17 +111,24 @@ public class Protecao {
         validador.isValidEmail(email);
     }
 
-    public void criarLicenca() throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
+    /*public void criarLicenca() throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException, InvalidKeySpecException, Exception {
         Licenca licenca = new Licenca(null, null, null, null, null, null, null, null, null, "hi", "21423423423", null);
+
+        Assimetrica assimetrica = new Assimetrica();
+        Ficheiros ficheiro = new Ficheiros();
+        KeyPair keyPair = assimetrica.getKeyPair();
 
         CBC cbc = new CBC();
         byte[] chave = cbc.generateKey();
         byte[] iv = cbc.generateIV();
 
-        cbc.encrypt(licenca, chave, iv);
+        byte[] iv2 = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
+        byte[] chave2 = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
 
-        System.out.println(cbc.decrypt(chave, iv).getNome() + " . " + cbc.decrypt(chave, iv).getNumTelemovel());
-    }
+        cbc.encrypt(licenca, chave2, iv2);
+
+        System.out.println(cbc.decrypt(chave2, iv2).getNome() + " . " + cbc.decrypt(chave2, iv2).getNumTelemovel());
+    }*/
 
     public void instanciarLicenca() throws Exception {
 
@@ -118,15 +142,20 @@ public class Protecao {
         Licenca licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
                 cpu.getCPUSerial(), dr.getHardDiskSerialNumber("C"), null, null, null, "hi", "21423423423", null);
 
-        System.out.println("Licenca: "+licenca);
+        //System.out.println(licenca.getCc());
+        CBC cbc = new CBC();
+        Assimetrica assimetrica = new Assimetrica();
+        byte[] chave = cbc.generateKey();
+        byte[] iv = cbc.generateIV();
 
-    }
+        Ficheiros ficheiros = new Ficheiros();
 
-    //Teste
-    public static void main(String[] args) throws IOException, InterruptedException, Exception {
-        Protecao p = new Protecao();
-        //p.getPCInfo();
-        p.instanciarLicenca();
+         ficheiros.escreverFicheiro("ToSend\\" + "chaveSimetrica", chave);
+         ficheiros.escreverFicheiro("ToSend\\" + "iv", iv);
+        cbc.encrypt(licenca, chave, iv);
+
+        ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
+        ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
     }
 
 }
