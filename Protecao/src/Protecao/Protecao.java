@@ -1,8 +1,9 @@
 package Protecao;
 
+import CartaoCidadao.dadosCartaoCidadao;
 import Ficheiros.Ficheiros;
 import InfoPessoa.ValidarPerguntas;
-import InformacaoSistema.DiscoRigido;
+import InformacaoSistema.discoRigido;
 import InformacaoSistema.cpu;
 import InformacaoSistema.hostName;
 import InformacaoSistema.getIp;
@@ -89,8 +90,8 @@ public class Protecao {
         cpu cpu = new cpu();
         System.out.println("CPU: " + cpu.getCPUSerial());
         System.out.println("----------------- NÃO SEI SE ESTÁ FEITO -----------------------");
-        DiscoRigido dr = new DiscoRigido();
-        System.out.println("DISK: " + dr.getHardDiskSerialNumber("C"));
+        discoRigido dr = new discoRigido();
+        System.out.println("DISK: " + dr.getSerialDisk());
         System.out.println("----------------- FEITO -----------------------");
         motherBoard mb = new motherBoard();
         System.out.println("MOTHERBOARD: " + mb.getMotherboardSN());
@@ -136,17 +137,39 @@ public class Protecao {
         getMac mac = new getMac();
         getIp ip = new getIp();
         cpu cpu = new cpu();
-        DiscoRigido dr = new DiscoRigido();
+        discoRigido dr = new discoRigido();
         motherBoard mb = new motherBoard();
+        
+        dadosCartaoCidadao dcc = new dadosCartaoCidadao();
+        
+        ValidarPerguntas validador = new ValidarPerguntas();
+        
+        /*
+        String ipAddress, String macAddress, String hostName, String serialMB,
+            String serialCPU, String serialDisk, byte[] chavePublica,
+        --
+        String nomeProjecto,String email, String nome, String numTelemovel, String cc
+        */
 
-        Licenca licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
-                cpu.getCPUSerial(), dr.getHardDiskSerialNumber("C"), null, null, null, "hi", "21423423423", null);
-
+        
         //System.out.println(licenca.getCc());
         CBC cbc = new CBC();
         Assimetrica assimetrica = new Assimetrica();
         byte[] chave = cbc.generateKey();
         byte[] iv = cbc.generateIV();
+        
+        String email="";
+        validador.isValidEmail(email);
+        
+        String nome="";
+        validador.isValidNome(nome);
+        
+        String numTelemovel="";
+        validador.isValidNumTelemovel(numTelemovel);
+        
+        Licenca licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
+                cpu.getCPUSerial(), dr.getSerialDisk(),chave ,email,nome, dcc.getNome(), numTelemovel, dcc.getCC());
+
 
         Ficheiros ficheiros = new Ficheiros();
 
@@ -156,6 +179,11 @@ public class Protecao {
 
         ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
         ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
+    }
+    
+    public static void main(String[] args) throws Exception {
+        Protecao p = new Protecao();
+        p.instanciarLicenca();
     }
 
 }

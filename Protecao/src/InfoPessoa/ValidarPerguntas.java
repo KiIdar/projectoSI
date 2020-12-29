@@ -30,11 +30,11 @@ public class ValidarPerguntas {
     public void isValidEmail(String email) {
         email = JOptionPane.showInputDialog(null, "Escreva o seu email:");
 
-        String expression = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
+        String expression = "^(.+)@(.+)$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         while (!pattern.matcher(email).find()) {
 
-            JOptionPane.showMessageDialog(null, "Nome inválido.\nTente novamente.");
+            JOptionPane.showMessageDialog(null, "E-mail inválido.\nTente novamente.");
             email = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu email:"));
         }
         System.out.println("E-mail final: "+email);
@@ -47,7 +47,7 @@ public class ValidarPerguntas {
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         while (!pattern.matcher(numero).find()) {
 
-            JOptionPane.showMessageDialog(null, "Nome inválido.\nTente novamente.");
+            JOptionPane.showMessageDialog(null, "Número inválido.\nTente novamente.");
             numero = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu numero:"));
         }
         System.out.println("Numero telemovel final: "+numero);
@@ -60,7 +60,7 @@ public class ValidarPerguntas {
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         while (!pattern.matcher(cc).find()) {
 
-            JOptionPane.showMessageDialog(null, "Nome inválido.\nTente novamente.");
+            JOptionPane.showMessageDialog(null, "Cartão cidadão inválido.\nTente novamente.");
             cc = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu número do cartão cidadão final:"));
         }
         System.out.println("número do cartão cidadão final: "+cc);
