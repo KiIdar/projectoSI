@@ -5,6 +5,7 @@ import Ficheiros.Ficheiros;
 import InfoPessoa.ValidarPerguntas;
 import InformacaoSistema.discoRigido;
 import InformacaoSistema.cpu;
+import InformacaoSistema.datas;
 import InformacaoSistema.hostName;
 import InformacaoSistema.getIp;
 import InformacaoSistema.getMac;
@@ -34,7 +35,7 @@ import modosCifra.CBC;
 
 public class Protecao {
 
-   /* public void testarAssimetrica() {
+    /* public void testarAssimetrica() {
         Assimetrica assimetrica = new Assimetrica();
         Ficheiros ficheiro = new Ficheiros();
         try {
@@ -76,26 +77,19 @@ public class Protecao {
             Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }*/
-
     public void getPCInfo() throws IOException, InterruptedException {
-
         hostName hostName = new hostName();
         System.out.println("HOSTNAME:" + hostName.getHost());
-        System.out.println("--------------- FEITO -------------------------");
         getIp ip = new getIp();
         System.out.println("IP: " + ip.getIp());
         getMac mac = new getMac();
         System.out.println("MAC: " + mac.getMac());
-        System.out.println("---------------- FEITO ------------------------");
         cpu cpu = new cpu();
         System.out.println("CPU: " + cpu.getCPUSerial());
-        System.out.println("----------------- NÃO SEI SE ESTÁ FEITO -----------------------");
         discoRigido dr = new discoRigido();
         System.out.println("DISK: " + dr.getSerialDisk());
-        System.out.println("----------------- FEITO -----------------------");
         motherBoard mb = new motherBoard();
         System.out.println("MOTHERBOARD: " + mb.getMotherboardSN());
-        System.out.println("----------------------------------------");
     }
 
     public void validarPerguntas() {
@@ -130,8 +124,7 @@ public class Protecao {
 
         System.out.println(cbc.decrypt(chave2, iv2).getNome() + " . " + cbc.decrypt(chave2, iv2).getNumTelemovel());
     }*/
-
-    public void instanciarLicenca() throws Exception {
+    public void instanciarLicenca(int dias) throws Exception {
 
         hostName hn = new hostName();
         getMac mac = new getMac();
@@ -139,51 +132,46 @@ public class Protecao {
         cpu cpu = new cpu();
         discoRigido dr = new discoRigido();
         motherBoard mb = new motherBoard();
-        
-        dadosCartaoCidadao dcc = new dadosCartaoCidadao();
-        
-        ValidarPerguntas validador = new ValidarPerguntas();
-        
-        /*
-        String ipAddress, String macAddress, String hostName, String serialMB,
-            String serialCPU, String serialDisk, byte[] chavePublica,
-        --
-        String nomeProjecto,String email, String nome, String numTelemovel, String cc
-        */
 
-        
+        dadosCartaoCidadao dcc = new dadosCartaoCidadao();
+        ValidarPerguntas validador = new ValidarPerguntas();
+        datas datas = new datas();
+
         //System.out.println(licenca.getCc());
         CBC cbc = new CBC();
         Assimetrica assimetrica = new Assimetrica();
         byte[] chave = cbc.generateKey();
         byte[] iv = cbc.generateIV();
-        
-        String email="";
-        validador.isValidEmail(email);
-        
-        String nome="";
-        validador.isValidNome(nome);
-        
-        String numTelemovel="";
-        validador.isValidNumTelemovel(numTelemovel);
-        
-        Licenca licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
-                cpu.getCPUSerial(), dr.getSerialDisk(),chave ,email,nome, dcc.getNome(), numTelemovel, dcc.getCC());
 
+        String email = "";
+        validador.isValidEmail(email);
+
+        String nome = "";
+        validador.isValidNome(nome);
+
+        String numTelemovel = "";
+        validador.isValidNumTelemovel(numTelemovel);
+
+        Licenca licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
+                cpu.getCPUSerial(), dr.getSerialDisk(), chave, email, nome, dcc.getNome(), numTelemovel, dcc.getCC(),
+                datas.getDataAtual(), datas.getDataFinal(dias));
+
+        System.out.println(licenca);
 
         Ficheiros ficheiros = new Ficheiros();
 
-         ficheiros.escreverFicheiro("ToSend\\" + "chaveSimetrica", chave);
-         ficheiros.escreverFicheiro("ToSend\\" + "iv", iv);
+        ficheiros.escreverFicheiro("ToSend\\" + "chaveSimetrica", chave);
+        ficheiros.escreverFicheiro("ToSend\\" + "iv", iv);
         cbc.encrypt(licenca, chave, iv);
 
         ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
         ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
     }
-    
+
     public static void main(String[] args) throws Exception {
         Protecao p = new Protecao();
-        p.instanciarLicenca();
+        
+        p.instanciarLicenca(1);
     }
 
 }

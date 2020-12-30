@@ -29,13 +29,14 @@ public class Licenca implements java.io.Serializable {
     private String serialDisk;
 
     //variaveis DEPOIS de se tornar uma licença oficial
-    private Date dataInicio;
-    private Date dataValidade;
+    //Tem de ser strings por causa dos emtodos
+    private String dataInicio;
+    private String dataFinal;
     private String fraseRandom;
 
     public Licenca(String ipAddress, String macAddress, String hostName, String serialMB,
             String serialCPU, String serialDisk, byte[] chavePublica, String nomeProjecto,
-            String email, String nome, String numTelemovel, String cc) {
+            String email, String nome, String numTelemovel, String cc, String dataInicio, String dataFinal) {
         this.chavePublica = chavePublica;
         this.nomeProjecto = nomeProjecto;
         this.email = email;
@@ -48,6 +49,8 @@ public class Licenca implements java.io.Serializable {
         this.serialMB = serialMB;
         this.serialCPU = serialCPU;
         this.serialDisk = serialDisk;
+        this.dataFinal=dataFinal;
+        this.dataInicio=dataInicio;
     }
 
     public byte[] getChavePublica() {
@@ -98,20 +101,20 @@ public class Licenca implements java.io.Serializable {
         this.cc = cc;
     }
 
-    public Date getDataInicio() {
+    public String getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(Date dataInicio) {
+    public void setDataInicio(String dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public Date getDataValidade() {
-        return dataValidade;
+    public String getDataValidade() {
+        return dataFinal;
     }
 
-    public void setDataValidade(Date dataValidade) {
-        this.dataValidade = dataValidade;
+    public void setDataValidade(String dataFinal) {
+        this.dataFinal = dataFinal;
     }
 
     public String getFraseRandom() {
