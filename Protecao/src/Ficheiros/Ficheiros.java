@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 public class Ficheiros {
 
     public void escreverFicheiro(String nomePasta, byte[] dados) {
-        System.out.println("Pasta com texto: " + dados);
         try {
             File myObj = new File(nomePasta);
             myObj.getParentFile().mkdirs();
@@ -61,6 +60,17 @@ public class Ficheiros {
         return inputfileBytes;
     }
 
+    public boolean checkExistsLicence()
+    {
+        File myObj = new File("ToSend\\licenca.aes");
+        System.out.println(myObj.getAbsolutePath()); 
+        
+        if (myObj.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     /*public void escreverLicenca(Licenca licenca) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 

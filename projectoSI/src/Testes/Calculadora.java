@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  *
  * @author Utilizador
  */
-public class testar {
+public class Calculadora {
 
     /**
      * @param args the command line arguments
@@ -20,6 +20,25 @@ public class testar {
 
         Scanner reader = new Scanner(System.in);
         Protecao protecao = new Protecao();
+        
+        Class c = new Object() {}.getClass().getEnclosingClass();
+        protecao.init(c.getName(), "3");
+       
+        if(protecao.isRegistered())
+        {
+            System.out.println("You got it!");
+        }
+        else
+        {
+           if(protecao.startRegistration())
+           {
+               System.out.println("Registration successfull!");
+           }
+           else
+           {
+               System.out.println("Something went wrong.");
+           }
+        }
 
         //Perguntas utilizador
         /*
@@ -91,9 +110,8 @@ public class testar {
         //Tesrar Validar
         //protecao.validarPerguntas();
         //escrever licença e ler
-        protecao.instanciarLicenca();
+        //protecao.instanciarLicenca();
         //protecao.criarLicenca();
-
         //protecao.testarAssimetrica();
     }
 }
