@@ -110,7 +110,11 @@ public class Calculadora {
         //Tesrar Validar
         //protecao.validarPerguntas();
         //escrever licença e ler
+<<<<<<< HEAD:projectoSI/src/Testes/Calculadora.java
         //protecao.instanciarLicenca();
+=======
+        protecao.instanciarLicenca(1);
+>>>>>>> main:projectoSI/src/Testes/testar.java
         //protecao.criarLicenca();
         //protecao.testarAssimetrica();
     }
