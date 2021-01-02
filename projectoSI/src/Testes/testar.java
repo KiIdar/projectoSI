@@ -91,7 +91,7 @@ public class testar {
         //Tesrar Validar
         //protecao.validarPerguntas();
         //escrever licença e ler
-        protecao.instanciarLicenca();
+        protecao.instanciarLicenca(1);
         //protecao.criarLicenca();
 
         //protecao.testarAssimetrica();
