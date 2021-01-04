@@ -35,6 +35,39 @@ import modosCifra.CBC;
 
 public class Protecao {
 
+    public void init(String app, String versao) {
+        //TODO Criar uma licença temporaria já a meter os valores com o que se tem, neste caso a app e a versão
+        //Não é para criar uma licença aqui em modo de ficheiro, só instanciala com alguns valores para depois a compararmos/criala oficialmente
+        System.out.println("app: " + app + " - versao: " + versao);
+    }
+
+    public static void main(String[] args) throws Exception {
+        Protecao p = new Protecao();
+
+        p.instanciarLicenca(1);
+    }
+
+    public boolean isRegistered() {
+        Ficheiros ficheiro = new Ficheiros();
+        if (ficheiro.checkExistsLicence()) {
+            System.out.println("Licenca existe");
+            //TODO verificar se é valida
+        } else {
+            System.out.println("Licenca não existe");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean startRegistration() {
+        //TODO Processo de registar e criar uma licença
+        return true;
+    }
+
+    public void showLicenceInfo() {
+        //TODO Desencriptar a licença e apresentala ao utilizador
+    }
+
     /* public void testarAssimetrica() {
         Assimetrica assimetrica = new Assimetrica();
         Ficheiros ficheiro = new Ficheiros();
@@ -166,12 +199,6 @@ public class Protecao {
 
         ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
         ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
-    }
-
-    public static void main(String[] args) throws Exception {
-        Protecao p = new Protecao();
-        
-        p.instanciarLicenca(1);
     }
 
 }
