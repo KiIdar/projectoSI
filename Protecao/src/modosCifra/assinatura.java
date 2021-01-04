@@ -5,6 +5,8 @@
  */
 package modosCifra;
 
+import Ficheiros.Ficheiros;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,8 +33,10 @@ import javax.swing.JOptionPane;
  * @author ASUS
  */
 public class assinatura {
-     private Provider ccProvider;
+
+    private Provider ccProvider;
     private KeyStore ks;
+    Ficheiros f = new Ficheiros();
 
     public assinatura() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
 
@@ -59,24 +63,33 @@ public class assinatura {
         return cer.getPublicKey();
     }
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, KeyStoreException, CertificateException, InvalidKeyException, SignatureException, UnrecoverableKeyException {
+    public static void main(String[] args) throws Exception {
+        assinatura as = new assinatura();
+        
+    }
 
+    public void fazAssintura(String nomeFicheiro) throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, InvalidKeyException, SignatureException, UnrecoverableKeyException {
         System.out.println("Ficheiro a ser gerado...");
         //Cria o ficheiro com este texto
-        String texto = "texto a testar..";
-        writeToFile("texto", texto.getBytes());
-        assinatura uc = new assinatura();
+        if (!new File("nomeFicheiro").exists()) {
+            f.escreverFicheiro("texto", nomeFicheiro.getBytes());
+        }
+        byte[] texto = f.lerFicheiro(nomeFicheiro);
+        assinatura uc = new assinatura();       
 
         //cria o ficheiro assinatura e cifra o texto com a chave privada
-        //writeToFile("AssinaturaFicheiro", uc.getSignatureOfData(texto.getBytes()));
+        f.escreverFicheiro("AssinaturaFicheiro", uc.getSignatureOfData(texto));
 
         //certificado
         Certificate cer = uc.getPublicCertificate();
-        writeToFile("certificadoChavePublica.cer", cer.getEncoded());
+        f.escreverFicheiro("certificadoChavePublica.cer", cer.getEncoded());
 
         //Pega na chave publica
         PublicKey pk = uc.getPublicKey(cer);
-        writeToFile("chavePublica", pk.getEncoded());
+        f.escreverFicheiro("chavePublica", pk.getEncoded());
+        
+        
+        
 
         System.out.println("Gerado com sucesso");
 
@@ -89,7 +102,7 @@ public class assinatura {
         verificarCertificado(certificado);
 
         //signature
-        byte[] mysignatureread = readFromFile("AssinaturaFicheiro");
+        byte[] mysignatureread = f.lerFicheiro("AssinaturaFicheiro");
 
         if (mysignatureread.length != 384) {
             JOptionPane.showMessageDialog(null, "Erro na assinatura.\nO comprimento da assinatura está errado!");
@@ -97,7 +110,7 @@ public class assinatura {
             Signature mysignature = Signature.getInstance("SHA256withRSA");
             mysignature.initVerify(certificado);
             //data
-            byte[] data = readFromFile("texto");
+            byte[] data = f.lerFicheiro("texto");
             mysignature.update(data);
 
             boolean verifies = mysignature.verify(mysignatureread);
@@ -113,30 +126,8 @@ public class assinatura {
         }
     }
 
-    public static void writeToFile(String nomeFicheiro, byte[] conteudo) {
-        try {
-            FileOutputStream fos = new FileOutputStream(nomeFicheiro);
-            fos.write(conteudo);
-            fos.close();
-        } catch (Exception e) {
-            System.out.println("erro a escrever ficheiro: " + e);
-        }
 
-    }
-
-    public static byte[] readFromFile(String fileName) {
-        try {
-            FileInputStream fis = new FileInputStream(fileName);
-            byte[] fileBytes = new byte[fis.available()];
-            fis.read(fileBytes);
-            return fileBytes;
-        } catch (Exception e) {
-            System.out.println("erro a ler ficheiro: " + e);
-        }
-        return null;
-
-    }
-
+    //Não está 100% certo
     public static void verificarCertificado(X509Certificate cer) {
         try {
             //cer.checkValidity(new Date(1990, 1, 1)); //data que permite fazer com que o certificado fique inválido
@@ -150,4 +141,5 @@ public class assinatura {
     public static String bytesToString(byte[] bytes) throws UnsupportedEncodingException {
         return new String(bytes, "UTF-8");
     }
+
 }
