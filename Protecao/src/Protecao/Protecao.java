@@ -11,15 +11,26 @@ import InformacaoSistema.getIp;
 import InformacaoSistema.getMac;
 import InformacaoSistema.motherBoard;
 import Licenca.Licenca;
+import Validacoes.Validar;
+import static Validacoes.Validar.verificarCertificado;
+import static Validacoes.Validar.writeToFile;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -30,6 +41,7 @@ import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SealedObject;
 import modosCifra.Assimetrica;
 import modosCifra.CBC;
 
@@ -199,6 +211,14 @@ public class Protecao {
 
         ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
         ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
+
+        Validar uc = new Validar();
+
+        Certificate cer = uc.getPublicCertificate();
+        writeToFile("\"ToSend\\\\certificadoChavePublica", cer.getEncoded());
+        PublicKey pk = uc.getPublicKey(cer);
+        writeToFile("\"ToSend\\\\chavePublica", pk.getEncoded());
+
     }
 
 }

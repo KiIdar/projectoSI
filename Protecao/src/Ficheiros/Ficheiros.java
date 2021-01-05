@@ -6,18 +6,23 @@
 package Ficheiros;
 
 import Licenca.Licenca;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.security.SignedObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.SealedObject;
 
 /**
  *
