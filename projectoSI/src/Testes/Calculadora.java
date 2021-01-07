@@ -110,7 +110,7 @@ public class Calculadora {
         //Tesrar Validar
         //protecao.validarPerguntas();
         //escrever licença e ler
-        //protecao.instanciarLicenca();
+        protecao.instanciarLicenca(5);
         //protecao.criarLicenca();
         //protecao.testarAssimetrica();
     }

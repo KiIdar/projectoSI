@@ -205,8 +205,6 @@ public class Protecao {
 
         Ficheiros ficheiros = new Ficheiros();
 
-        ficheiros.escreverFicheiro("ToSend\\" + "chaveSimetrica", chave);
-        ficheiros.escreverFicheiro("ToSend\\" + "iv", iv);
         cbc.encrypt(licenca, chave, iv);
 
         ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
@@ -215,9 +213,9 @@ public class Protecao {
         Validar uc = new Validar();
 
         Certificate cer = uc.getPublicCertificate();
-        writeToFile("\"ToSend\\\\certificadoChavePublica", cer.getEncoded());
+        writeToFile("ToSend\\certificadoChavePublica.cer", cer.getEncoded());
         PublicKey pk = uc.getPublicKey(cer);
-        writeToFile("\"ToSend\\\\chavePublica", pk.getEncoded());
+        writeToFile("ToSend\\chavePublica.txt", pk.getEncoded());
 
     }
 

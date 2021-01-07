@@ -32,13 +32,13 @@ import javax.swing.JOptionPane;
  *
  * @author ASUS
  */
-public class assinatura {
+public class Assinatura {
 
     private Provider ccProvider;
     private KeyStore ks;
     Ficheiros f = new Ficheiros();
 
-    public assinatura() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
+    public Assinatura() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
 
         this.ccProvider = Security.getProvider("SunPKCS11-CartaoCidadao");
         this.ks = KeyStore.getInstance("PKCS11", ccProvider);
@@ -64,7 +64,7 @@ public class assinatura {
     }
 
     public static void main(String[] args) throws Exception {
-        assinatura as = new assinatura();
+        Assinatura as = new Assinatura();
         
     }
 
@@ -75,7 +75,7 @@ public class assinatura {
             f.escreverFicheiro("texto", nomeFicheiro.getBytes());
         }
         byte[] texto = f.lerFicheiro(nomeFicheiro);
-        assinatura uc = new assinatura();       
+        Assinatura uc = new Assinatura();       
 
         //cria o ficheiro assinatura e cifra o texto com a chave privada
         f.escreverFicheiro("AssinaturaFicheiro", uc.getSignatureOfData(texto));
