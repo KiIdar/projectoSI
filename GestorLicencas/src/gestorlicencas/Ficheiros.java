@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -38,6 +40,9 @@ public class Ficheiros {
     }
 
     public byte[] lerFicheiro(String nomePasta) {
+        /*Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        System.out.println("Current relative path is: " + s);*/
         byte[] inputfileBytes = null;
         try {
             FileInputStream fis = new FileInputStream(nomePasta);
@@ -47,7 +52,7 @@ public class Ficheiros {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-       // System.out.println("Lido byte: " + inputfileBytes);
+        // System.out.println("Lido byte: " + inputfileBytes);
         return inputfileBytes;
     }
 }

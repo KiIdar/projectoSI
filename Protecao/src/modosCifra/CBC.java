@@ -254,6 +254,10 @@ public class CBC {
         ObjectOutputStream oos = new ObjectOutputStream(cos);
         oos.writeObject(signedLicence);
         oos.close();
+        bos.close();
+        cos.close();
+        oos.close();
+        fos.close();
     }
      
     public static Licenca decrypt(byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {

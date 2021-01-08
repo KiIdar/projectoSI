@@ -5,9 +5,11 @@ import Licenca.Licenca;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -21,10 +23,15 @@ import java.security.SignedObject;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
-import javax.swing.JOptionPane;
+import modosCifra.Assimetrica;
+import modosCifra.CBC;
 
 public class Validar {
 
@@ -39,11 +46,31 @@ public class Validar {
         this.ks.load(null, null);
     }
 
-    public SignedObject getSignatureOfData(SealedObject licenca) throws KeyStoreException, NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnrecoverableKeyException, IOException {
+    public SignedObject getSignatureOfData(SealedObject licenca) throws KeyStoreException, NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnrecoverableKeyException, IOException, InvalidKeySpecException, ClassNotFoundException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
         PrivateKey pk = (PrivateKey) ks.getKey("CITIZEN AUTHENTICATION CERTIFICATE", null);
         Signature sig = Signature.getInstance("SHA256withRSA", this.ccProvider);
 
         SignedObject signedobject = new SignedObject(licenca, pk, sig);
+
+        /////////////testar//////////
+        Ficheiros ficheiro = new Ficheiros();
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(ficheiro.lerFicheiro("ToSend\\chavePublica.txt")));
+        Signature sig2 = Signature.getInstance(publicKey.getAlgorithm());
+        boolean verified = signedobject.verify(publicKey, sig2);
+        System.out.println("Is signed Object verified = " + verified);
+        //Get Object
+        SealedObject unsignedObject = (SealedObject) signedobject.getObject();
+        Assimetrica assimetrica = new Assimetrica();
+        KeyPair keyPair = assimetrica.getKeyPair();
+        CBC cbc = new CBC();
+        byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
+        byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
+
+        Licenca licencaTest = cbc.decrypt(chave, iv);
+        
+        System.out.println("debugg point here");
+        ////////////////////////////
         return signedobject;
 
         /*sig.initSign(pk); //chave privada
@@ -60,7 +87,7 @@ public class Validar {
         return cer.getPublicKey();
     }
 
-   /* public static void main(String[] args) throws IOException, NoSuchAlgorithmException, KeyStoreException, CertificateException, InvalidKeyException, SignatureException, UnrecoverableKeyException {
+    /* public static void main(String[] args) throws IOException, NoSuchAlgorithmException, KeyStoreException, CertificateException, InvalidKeyException, SignatureException, UnrecoverableKeyException {
 
         System.out.println("Ficheiro a ser gerado...");
         //Cria o ficheiro com este texto
@@ -115,7 +142,6 @@ public class Validar {
             System.out.println("Assignature: ");
         }
     }*/
-
     public static void writeToFile(String nomeFicheiro, byte[] conteudo) {
         try {
             FileOutputStream fos = new FileOutputStream(nomeFicheiro);
