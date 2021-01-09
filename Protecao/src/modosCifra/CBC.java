@@ -45,6 +45,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -279,8 +280,7 @@ public class CBC {
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         Cipher cipher = Cipher.getInstance(algcript);
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-        
-        SealedObject so = new SealedObject((Serializable) unsignedObject, cipher);
+        SealedObject so = new SealedObject((Serializable) DatatypeConverter.printHexBinary((byte[]) unsignedObject), cipher);
         Licenca licenca = (Licenca) so.getObject(cipher);
         System.out.println("Licenca email = " + licenca.getEmail());
         return licenca;
