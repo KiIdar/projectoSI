@@ -28,9 +28,13 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import modosCifra.Assimetrica;
 import modosCifra.CBC;
 
@@ -67,8 +71,12 @@ public class Validar {
         byte[] iv = assimetrica.decrypt(f.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
         byte[] chave = assimetrica.decrypt(f.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
         
+        SecretKey key = new SecretKeySpec(chave, "AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         SealedObject sealedObject = (SealedObject) signedobject.getObject();
-        Licenca licencaTest = cbc.decrypt(chave, iv, sealedObject);
+        
+        Licenca licencaTest = cbc.decrypt(cipher, sealedObject);
 
         System.out.println("debugg point here");
         ////////////////////////////
