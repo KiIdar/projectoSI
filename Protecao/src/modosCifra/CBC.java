@@ -282,6 +282,7 @@ public class CBC {
         
         SealedObject so = new SealedObject((Serializable) unsignedObject, cipher);
         Licenca licenca = (Licenca) so.getObject(cipher);
+        System.out.println("Licenca email = " + licenca.getEmail());
         return licenca;
 
     }
