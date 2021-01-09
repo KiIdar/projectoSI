@@ -57,7 +57,7 @@ public class Validar {
         PrivateKey pk = (PrivateKey) ks.getKey("CITIZEN AUTHENTICATION CERTIFICATE", null);
         Signature sig = Signature.getInstance("SHA256withRSA", this.ccProvider);
 
-        SignedObject signedobject = new SignedObject(licenca, pk, sig);
+       SignedObject signedobject = new SignedObject(licenca, pk, sig);
 
         /////////////testar/////////        
         PublicKey publicKey = reconstruct_public_key("RSA", f.lerFicheiro("ToSend\\chavePublica.txt"));

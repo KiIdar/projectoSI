@@ -205,12 +205,13 @@ public class Protecao {
 
         Ficheiros ficheiros = new Ficheiros();
 
+        ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
+        ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
+        
         System.out.println("Próximo cbc");
         cbc.encrypt(licenca, chave, iv);
         System.out.println("FIM CBC");
-        ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
-        ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
-
+        
         Validar uc = new Validar();
 
         Certificate cer = uc.getPublicCertificate();
