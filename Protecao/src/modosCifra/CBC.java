@@ -234,12 +234,11 @@ public class CBC {
         oos.writeObject(sealedObject);
         oos.close();
     }*/
-
-     public void encrypt(Serializable object, byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, CertificateException, KeyStoreException, SignatureException, UnrecoverableKeyException {
+    public void encrypt(Serializable object, byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, CertificateException, KeyStoreException, SignatureException, UnrecoverableKeyException, InvalidKeySpecException, ClassNotFoundException, BadPaddingException {
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         // Create cipher
         Cipher cipher = Cipher.getInstance(algcript);
-        
+
         cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
 
         SealedObject sealedObject = new SealedObject(object, cipher);
@@ -258,8 +257,9 @@ public class CBC {
         cos.close();
         oos.close();
         fos.close();
+
     }
-     
+
     public static Licenca decrypt(byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         Cipher cipher = Cipher.getInstance(algcript);
@@ -272,4 +272,14 @@ public class CBC {
         return licenca;
 
     }
-         }
+
+    public Licenca decrypt(byte[] chave, byte[] iv, SealedObject unsignedObject) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
+        SecretKey key = new SecretKeySpec(chave, algoritmo);
+        Cipher cipher = Cipher.getInstance(algcript);
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+        SealedObject so = new SealedObject(unsignedObject, cipher);
+        Licenca licenca = (Licenca) so.getObject(cipher);
+        return licenca;
+
+    }
+}
