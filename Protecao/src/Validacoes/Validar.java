@@ -66,8 +66,9 @@ public class Validar {
         CBC cbc = new CBC();
         byte[] iv = assimetrica.decrypt(f.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
         byte[] chave = assimetrica.decrypt(f.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
-
-        Licenca licencaTest = cbc.decrypt(chave, iv, signedobject.getObject());
+        
+        SealedObject sealedObject = (SealedObject) signedobject.getObject();
+        Licenca licencaTest = cbc.decrypt(chave, iv, sealedObject);
 
         System.out.println("debugg point here");
         ////////////////////////////

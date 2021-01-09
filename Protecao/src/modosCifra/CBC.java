@@ -31,6 +31,7 @@ import java.security.SignedObject;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 import java.util.Random;
 import java.util.Scanner;
 import javax.crypto.BadPaddingException;
@@ -276,11 +277,12 @@ public class CBC {
 
     }
 
-    public Licenca decrypt(byte[] chave, byte[] iv, Object unsignedObject) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
+    public Licenca decrypt(byte[] chave, byte[] iv, SealedObject unsignedObject) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         Cipher cipher = Cipher.getInstance(algcript);
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-        SealedObject so = new SealedObject((Serializable) DatatypeConverter.printHexBinary((byte[]) unsignedObject), cipher);
+        
+        SealedObject so = new SealedObject((SealedObject) unsignedObject, cipher);
         Licenca licenca = (Licenca) so.getObject(cipher);
         System.out.println("Licenca email = " + licenca.getEmail());
         return licenca;
