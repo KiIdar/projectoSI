@@ -201,12 +201,13 @@ public class Protecao {
                 cpu.getCPUSerial(), dr.getSerialDisk(), chave, email, nome, dcc.getNome(), numTelemovel, dcc.getCC(),
                 datas.getDataAtual(), datas.getDataFinal(dias));
 
-        System.out.println(licenca);
+        System.out.println("Licenca:"+licenca);
 
         Ficheiros ficheiros = new Ficheiros();
 
+        System.out.println("Próximo cbc");
         cbc.encrypt(licenca, chave, iv);
-
+        System.out.println("FIM CBC");
         ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
         ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
 

@@ -24,6 +24,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.BadPaddingException;
@@ -46,17 +47,17 @@ public class Validar {
         this.ks.load(null, null);
     }
 
-    public SignedObject getSignatureOfData(SealedObject licenca) throws KeyStoreException, NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnrecoverableKeyException, IOException, InvalidKeySpecException, ClassNotFoundException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+    public SignedObject getSignatureOfData(SealedObject licenca) throws KeyStoreException, NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnrecoverableKeyException, IOException, InvalidKeySpecException, ClassNotFoundException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, CertificateException {
+        System.out.println("chegou");
+
         PrivateKey pk = (PrivateKey) ks.getKey("CITIZEN AUTHENTICATION CERTIFICATE", null);
         Signature sig = Signature.getInstance("SHA256withRSA", this.ccProvider);
 
         SignedObject signedobject = new SignedObject(licenca, pk, sig);
 
-        /////////////testar//////////
-        Ficheiros ficheiro = new Ficheiros();
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(ficheiro.lerFicheiro("ToSend\\chavePublica.txt")));
-        Signature sig2 = Signature.getInstance(publicKey.getAlgorithm());
+        /////////////testar/////////        
+        PublicKey publicKey = reconstruct_public_key("RSA", f.lerFicheiro("ToSend\\chavePublica.txt"));
+        Signature sig2 = Signature.getInstance("SHA256withRSA");
         boolean verified = signedobject.verify(publicKey, sig2);
         System.out.println("Is signed Object verified = " + verified);
         //Get Object
@@ -64,11 +65,11 @@ public class Validar {
         Assimetrica assimetrica = new Assimetrica();
         KeyPair keyPair = assimetrica.getKeyPair();
         CBC cbc = new CBC();
-        byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
-        byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
+        byte[] iv = assimetrica.decrypt(f.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
+        byte[] chave = assimetrica.decrypt(f.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
 
-        Licenca licencaTest = cbc.decrypt(chave, iv);
-        
+        Licenca licencaTest = cbc.decrypt(chave, iv, unsignedObject);
+
         System.out.println("debugg point here");
         ////////////////////////////
         return signedobject;
@@ -77,6 +78,22 @@ public class Validar {
         sig.update(bytesToSign); //texto a assinar
 
         return sig.sign(); // assinar (é a assinatura)*/
+    }
+
+    public PublicKey reconstruct_public_key(String algorithm, byte[] pub_key) {
+        PublicKey public_key = null;
+
+        try {
+            KeyFactory kf = KeyFactory.getInstance(algorithm);
+            EncodedKeySpec pub_key_spec = new X509EncodedKeySpec(pub_key);
+            public_key = kf.generatePublic(pub_key_spec);
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Could not reconstruct the public key, the given algorithm oculd not be found.");
+        } catch (InvalidKeySpecException e) {
+            System.out.println("Could not reconstruct the public key");
+        }
+
+        return public_key;
     }
 
     public Certificate getPublicCertificate() throws KeyStoreException {
