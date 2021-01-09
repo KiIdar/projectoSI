@@ -275,11 +275,12 @@ public class CBC {
 
     }
 
-    public Licenca decrypt(byte[] chave, byte[] iv, SealedObject unsignedObject) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
+    public Licenca decrypt(byte[] chave, byte[] iv, Object unsignedObject) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         Cipher cipher = Cipher.getInstance(algcript);
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-        SealedObject so = new SealedObject(unsignedObject, cipher);
+        
+        SealedObject so = new SealedObject((Serializable) unsignedObject, cipher);
         Licenca licenca = (Licenca) so.getObject(cipher);
         return licenca;
 

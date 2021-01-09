@@ -61,14 +61,13 @@ public class Validar {
         boolean verified = signedobject.verify(publicKey, sig2);
         System.out.println("Is signed Object verified = " + verified);
         //Get Object
-        SealedObject unsignedObject = (SealedObject) signedobject.getObject();
         Assimetrica assimetrica = new Assimetrica();
         KeyPair keyPair = assimetrica.getKeyPair();
         CBC cbc = new CBC();
         byte[] iv = assimetrica.decrypt(f.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
         byte[] chave = assimetrica.decrypt(f.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
 
-        Licenca licencaTest = cbc.decrypt(chave, iv, unsignedObject);
+        Licenca licencaTest = cbc.decrypt(chave, iv, signedobject.getObject());
 
         System.out.println("debugg point here");
         ////////////////////////////
