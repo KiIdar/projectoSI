@@ -5,6 +5,7 @@
  */
 package gestorlicencas;
 
+import Licenca.Licenca;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,8 +22,12 @@ import java.security.SignatureException;
 import java.security.SignedObject;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
@@ -38,7 +43,7 @@ public class Assinatura {
     public Assinatura() {
     }
 
-    public void getSealedObject() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, InvalidKeyException, SignatureException, ClassNotFoundException, NoSuchPaddingException, InvalidAlgorithmParameterException {
+    public Licenca getLicenca() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, InvalidKeyException, SignatureException, ClassNotFoundException, NoSuchPaddingException, InvalidAlgorithmParameterException {
         Ficheiros ficheiro = new Ficheiros();
         Signature verificationEngine = Signature.getInstance("SHA256withRSA");
 
@@ -56,7 +61,6 @@ public class Assinatura {
         Assimetrica assimetrica = new Assimetrica();
         KeyPair keyPair = assimetrica.getKeyPair();
 
-        CBC cbc = new CBC();
         byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
         byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
         SecretKey key = new SecretKeySpec(chave, "AES");
@@ -70,17 +74,44 @@ public class Assinatura {
         CipherInputStream cos = new CipherInputStream(bos, cipher);
         ObjectInputStream objectIn = new ObjectInputStream(cos);
         SignedObject signedObject = (SignedObject) objectIn.readObject(); 
+        SealedObject sealedObject = (SealedObject) signedObject.getObject();
         
         if(signedObject.verify(publicKey, verificationEngine))
         {
             System.out.println("Assinatura valida!");
+            return decryptLicenca(sealedObject, cipher);
         }
         else
         {
             System.out.println("Assinatura não valida!");
         }
         
-        
+        return null;
+    }
+
+    private Licenca decryptLicenca(SealedObject sealedObject, Cipher cipher) {
+        CBC cbc = new CBC();
+        Licenca licenca;
+        try {
+            licenca = cbc.decrypt(cipher, sealedObject);
+        } catch (IOException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidAlgorithmParameterException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }

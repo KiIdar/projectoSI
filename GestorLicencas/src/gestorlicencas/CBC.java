@@ -245,4 +245,11 @@ public class CBC {
         return licenca;
 
     }
+    public Licenca decrypt(Cipher cipher, SealedObject sealedObject) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
+        
+        Licenca licenca = (Licenca) sealedObject.getObject(cipher);
+        System.out.println("Licenca email = " + licenca.getCc());
+        return licenca;
+
+    }
          }

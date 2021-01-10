@@ -14,8 +14,8 @@ import java.util.Date;
  */
 public class Licenca implements java.io.Serializable {
 
-    private byte[] chavePublica;
     //info do PC ainda tenho que ver qual queremos
+    private static final long serialVersionUID = 6529685098267757690L;
     private String nomeProjecto;
     private String email;
     private String nome;
@@ -32,12 +32,10 @@ public class Licenca implements java.io.Serializable {
     //Tem de ser strings por causa dos emtodos
     private String dataInicio;
     private String dataFinal;
-    private String fraseRandom;
 
     public Licenca(String ipAddress, String macAddress, String hostName, String serialMB,
             String serialCPU, String serialDisk, byte[] chavePublica, String nomeProjecto,
             String email, String nome, String numTelemovel, String cc, String dataInicio, String dataFinal) {
-        this.chavePublica = chavePublica;
         this.nomeProjecto = nomeProjecto;
         this.email = email;
         this.nome = nome;
@@ -51,14 +49,6 @@ public class Licenca implements java.io.Serializable {
         this.serialDisk = serialDisk;
         this.dataFinal=dataFinal;
         this.dataInicio=dataInicio;
-    }
-
-    public byte[] getChavePublica() {
-        return chavePublica;
-    }
-
-    public void setChavePublica(byte[] chavePublica) {
-        this.chavePublica = chavePublica;
     }
 
     public String getNomeProjecto() {
