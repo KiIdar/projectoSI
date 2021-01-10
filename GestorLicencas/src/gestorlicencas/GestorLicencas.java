@@ -8,6 +8,7 @@ import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 public class GestorLicencas {
 
@@ -21,10 +22,34 @@ public class GestorLicencas {
 
 //      Licenca licenca = cbc.decrypt(chave, iv);
         Assinatura assinatura = new Assinatura();
-       Licenca licenca = assinatura.getLicenca();
+        Licenca licenca = assinatura.getLicenca();
+       
+       
+       GestorLicencas gl = new GestorLicencas();
+       
+       gl.enviarLicenca();
+       
+       
+       
 
         //usei o debugg para ver de maneira facil a variavel licenca, está cá tudo o que mandei
         System.out.println("debugg point here");
+    }
+    
+    public void enviarLicenca() throws NoSuchAlgorithmException{
+        CBC cbc = new CBC();
+        Assimetrica assimetrica = new Assimetrica();
+        Ficheiros f = new Ficheiros();
+        
+        byte[] chave = cbc.generateKey();
+        byte[] iv = cbc.generateIV();
+        
+        KeyPair k = KeyStorage.getKeys("keystore.jks", "123456", "nome");
+        System.out.println("Privada:"+k.getPrivate().getEncoded());
+        System.out.println("Publica:"+k.getPublic().getEncoded());
+        System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));
+        
+        
     }
     
 }
