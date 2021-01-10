@@ -206,8 +206,6 @@ public class Protecao {
         ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
         ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
 
-        cbc.encrypt(licenca, chave, iv);
-
         Validar uc = new Validar();
 
         Certificate cer = uc.getPublicCertificate();
@@ -215,11 +213,7 @@ public class Protecao {
         PublicKey pk = uc.getPublicKey(cer);
         writeToFile("ToSend\\chavePublica.txt", pk.getEncoded());
 
+        cbc.encrypt(licenca, chave, iv);
+
     }
-public void test() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
-{
-    Assimetrica assimetrica = new Assimetrica();
-    Ficheiros ficheiro = new Ficheiros();
-    ficheiro.escreverFicheiro("ToSend\\test.txt", assimetrica.encrypt("test".getBytes(), assimetrica.getPublicKey()));
-}
 }
