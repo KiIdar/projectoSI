@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gestorlicencas;
 
 import java.security.KeyPair;
@@ -14,10 +9,6 @@ import java.security.PublicKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-/**
- *
- * @author Utilizador
- */
 public class GestorLicencas {
 
     /**

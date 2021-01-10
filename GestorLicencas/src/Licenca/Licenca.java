@@ -12,14 +12,13 @@ import java.util.Date;
  * @author Utilizador
  */
 public class Licenca  implements java.io.Serializable {
-
-    private byte[] chavePublica;
-    //info do PC ainda tenho que ver qual queremos
+ //info do PC ainda tenho que ver qual queremos
+    private static final long serialVersionUID = 6529685098267757690L;
     private String nomeProjecto;
     private String email;
-    private String nome;
+    private String nomeCC;
     private String numTelemovel;
-    private String cc;
+    private String numeroCC;
     private String ipAddress;
     private String macAddress;
     private String hostName;
@@ -28,34 +27,28 @@ public class Licenca  implements java.io.Serializable {
     private String serialDisk;
 
     //variaveis DEPOIS de se tornar uma licença oficial
-    private Date dataInicio;
-    private Date dataValidade;
-    private String fraseRandom;
+    //Tem de ser strings por causa dos emtodos
+    private String dataInicio;
+    private String dataFinal;
 
     public Licenca(String ipAddress, String macAddress, String hostName, String serialMB,
-            String serialCPU, String serialDisk, byte[] chavePublica, String nomeProjecto,
-            String email, String nome, String numTelemovel, String cc) {
-        this.chavePublica = chavePublica;
+            String serialCPU, String serialDisk, String nomeProjecto,
+            String email, String nome, String numTelemovel, String cc, String dataInicio, String dataFinal) {
         this.nomeProjecto = nomeProjecto;
         this.email = email;
-        this.nome = nome;
+        this.nomeCC = nome;
         this.numTelemovel = numTelemovel;
-        this.cc = cc;
+        this.numeroCC = cc;
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
         this.hostName = hostName;
         this.serialMB = serialMB;
         this.serialCPU = serialCPU;
         this.serialDisk = serialDisk;
+        this.dataFinal=dataFinal;
+        this.dataInicio=dataInicio;
     }
 
-    public byte[] getChavePublica() {
-        return chavePublica;
-    }
-
-    public void setChavePublica(byte[] chavePublica) {
-        this.chavePublica = chavePublica;
-    }
 
     public String getNomeProjecto() {
         return nomeProjecto;
@@ -74,11 +67,11 @@ public class Licenca  implements java.io.Serializable {
     }
 
     public String getNome() {
-        return nome;
+        return nomeCC;
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nomeCC = nome;
     }
 
     public String getNumTelemovel() {
@@ -90,35 +83,26 @@ public class Licenca  implements java.io.Serializable {
     }
 
     public String getCc() {
-        return cc;
+        return numeroCC;
     }
 
     public void setCc(String cc) {
-        this.cc = cc;
+        this.numeroCC = cc;
     }
 
-    public Date getDataInicio() {
+    public String getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(Date dataInicio) {
+    public void setDataInicio(String dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public Date getDataValidade() {
-        return dataValidade;
+    public String getDataValidade() {
+        return dataFinal;
     }
 
-    public void setDataValidade(Date dataValidade) {
-        this.dataValidade = dataValidade;
+    public void setDataValidade(String dataFinal) {
+        this.dataFinal = dataFinal;
     }
-
-    public String getFraseRandom() {
-        return fraseRandom;
-    }
-
-    public void setFraseRandom(String fraseRandom) {
-        this.fraseRandom = fraseRandom;
-    }
-
 }
