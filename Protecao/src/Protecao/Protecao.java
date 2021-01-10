@@ -151,24 +151,6 @@ public class Protecao {
         validador.isValidEmail(email);
     }
 
-    /*public void criarLicenca() throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException, InvalidKeySpecException, Exception {
-        Licenca licenca = new Licenca(null, null, null, null, null, null, null, null, null, "hi", "21423423423", null);
-
-        Assimetrica assimetrica = new Assimetrica();
-        Ficheiros ficheiro = new Ficheiros();
-        KeyPair keyPair = assimetrica.getKeyPair();
-
-        CBC cbc = new CBC();
-        byte[] chave = cbc.generateKey();
-        byte[] iv = cbc.generateIV();
-
-        byte[] iv2 = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
-        byte[] chave2 = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
-
-        cbc.encrypt(licenca, chave2, iv2);
-
-        System.out.println(cbc.decrypt(chave2, iv2).getNome() + " . " + cbc.decrypt(chave2, iv2).getNumTelemovel());
-    }*/
     public void instanciarLicenca(int dias) throws Exception {
 
         hostName hn = new hostName();

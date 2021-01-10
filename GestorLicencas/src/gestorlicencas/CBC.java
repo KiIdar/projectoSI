@@ -240,7 +240,7 @@ public class CBC {
         CipherInputStream cipherInputSteam = new CipherInputStream(new BufferedInputStream(new FileInputStream("ToSend\\licenca.aes")), cipher);
         ObjectInputStream inputStream = new ObjectInputStream(cipherInputSteam);
         SealedObject sealedObject = (SealedObject) inputStream.readObject();
-        Licenca test = new Licenca(null, null, null, null, null, null, null, null, null, null, null, null);
+        Licenca test = new Licenca(null, null, null, null, null,null, null, null, null, null, null,null,null);
         Licenca licenca = (Licenca) sealedObject.getObject(cipher);
         return licenca;
 
