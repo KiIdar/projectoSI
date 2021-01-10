@@ -6,11 +6,14 @@
 package gestorlicencas;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Signature;
@@ -18,7 +21,13 @@ import java.security.SignatureException;
 import java.security.SignedObject;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -29,9 +38,8 @@ public class Assinatura {
     public Assinatura() {
     }
 
-    public void getSealedObject() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, InvalidKeyException, SignatureException, ClassNotFoundException {
+    public void getSealedObject() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, InvalidKeyException, SignatureException, ClassNotFoundException, NoSuchPaddingException, InvalidAlgorithmParameterException {
         Ficheiros ficheiro = new Ficheiros();
-        SignedObject so = null;
         Signature verificationEngine = Signature.getInstance("SHA256withRSA");
 
         KeyFactory kf = KeyFactory.getInstance("RSA");
@@ -39,23 +47,40 @@ public class Assinatura {
 
         verificationEngine.initVerify(publicKey);
 
-        FileInputStream fileInputStream = new FileInputStream("ToSend\\licenca.aes"); //abre
+        /*FileInputStream fileInputStream = new FileInputStream("ToSend\\licenca.aes"); //abre
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream); //abre
         ObjectInputStream objectIn = new ObjectInputStream(bufferedInputStream); //abre
         fileInputStream.close();
         bufferedInputStream.close();
-        objectIn.close();
-        SealedObject message = (SealedObject) objectIn.readObject(); // read message
-        System.out.println("msg: " + message);
-        byte[] signature = (byte[]) objectIn.readObject(); // read signature, hmmm
+        objectIn.close();*/
+        Assimetrica assimetrica = new Assimetrica();
+        KeyPair keyPair = assimetrica.getKeyPair();
 
-        if (verificationEngine.verify(signature)) {
-            System.out.println("Assinatura verificada");
-            try {
-                Object myobj = so.getObject();
-            } catch (java.lang.ClassNotFoundException e) {
-            }
-        };
+        CBC cbc = new CBC();
+        byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
+        byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
+        SecretKey key = new SecretKeySpec(chave, "AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+
+        File file = new File("ToSend\\licenca.aes");
+        file.getParentFile().mkdirs();
+        FileInputStream fos = new FileInputStream(file);
+        BufferedInputStream bos = new BufferedInputStream(fos);
+        CipherInputStream cos = new CipherInputStream(bos, cipher);
+        ObjectInputStream objectIn = new ObjectInputStream(cos);
+        SignedObject signedObject = (SignedObject) objectIn.readObject(); 
+        
+        if(signedObject.verify(publicKey, verificationEngine))
+        {
+            System.out.println("Assinatura valida!");
+        }
+        else
+        {
+            System.out.println("Assinatura não valida!");
+        }
+        
+        
     }
 
 }

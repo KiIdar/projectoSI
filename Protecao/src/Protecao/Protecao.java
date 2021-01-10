@@ -201,17 +201,13 @@ public class Protecao {
                 cpu.getCPUSerial(), dr.getSerialDisk(), chave, email, nome, dcc.getNome(), numTelemovel, dcc.getCC(),
                 datas.getDataAtual(), datas.getDataFinal(dias));
 
-        System.out.println("Licenca:"+licenca);
-
         Ficheiros ficheiros = new Ficheiros();
 
         ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
         ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
-        
-        System.out.println("Próximo cbc");
+
         cbc.encrypt(licenca, chave, iv);
-        System.out.println("FIM CBC");
-        
+
         Validar uc = new Validar();
 
         Certificate cer = uc.getPublicCertificate();
@@ -220,5 +216,10 @@ public class Protecao {
         writeToFile("ToSend\\chavePublica.txt", pk.getEncoded());
 
     }
-
+public void test() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+{
+    Assimetrica assimetrica = new Assimetrica();
+    Ficheiros ficheiro = new Ficheiros();
+    ficheiro.escreverFicheiro("ToSend\\test.txt", assimetrica.encrypt("test".getBytes(), assimetrica.getPublicKey()));
+}
 }

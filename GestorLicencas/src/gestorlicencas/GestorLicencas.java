@@ -9,6 +9,10 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import Licenca.Licenca;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 /**
  *
@@ -30,6 +34,8 @@ public class GestorLicencas {
         CBC cbc = new CBC();
         byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
         byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
+        byte[] test = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\test.txt"), keyPair.getPrivate());
+        System.out.println("hi - " + new String(test));
 
 //        Licenca licenca = cbc.decrypt(chave, iv);
         Assinatura assinatura = new Assinatura();
@@ -38,5 +44,5 @@ public class GestorLicencas {
         //usei o debugg para ver de maneira facil a variavel licenca, está cá tudo o que mandei
         System.out.println("debugg point here");
     }
-
+    
 }

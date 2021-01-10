@@ -237,7 +237,6 @@ public class CBC {
         oos.close();
     }*/
     public void encrypt(Serializable object, byte[] chave, byte[] iv) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, CertificateException, KeyStoreException, SignatureException, UnrecoverableKeyException, InvalidKeySpecException, ClassNotFoundException, BadPaddingException {
-        System.out.println("ENTROU NO CBC ENCRYPT");
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         // Create cipher
         Cipher cipher = Cipher.getInstance(algcript);
@@ -246,7 +245,6 @@ public class CBC {
 
         SealedObject sealedObject = new SealedObject(object, cipher);
         Validar validar = new Validar();
-        System.out.println("Cheguei chegando");
         SignedObject signedLicence = validar.getSignatureOfData(sealedObject);
 
         File file = new File("ToSend\\licenca.aes");

@@ -113,5 +113,6 @@ public class Calculadora {
         protecao.instanciarLicenca(5);
         //protecao.criarLicenca();
         //protecao.testarAssimetrica();
+        //protecao.test();
     }
 }
