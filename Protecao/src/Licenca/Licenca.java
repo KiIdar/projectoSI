@@ -18,9 +18,9 @@ public class Licenca implements java.io.Serializable {
     private static final long serialVersionUID = 6529685098267757690L;
     private String nomeProjecto;
     private String email;
-    private String nome;
+    private String nomeCC;
     private String numTelemovel;
-    private String cc;
+    private String numeroCC;
     private String ipAddress;
     private String macAddress;
     private String hostName;
@@ -34,13 +34,13 @@ public class Licenca implements java.io.Serializable {
     private String dataFinal;
 
     public Licenca(String ipAddress, String macAddress, String hostName, String serialMB,
-            String serialCPU, String serialDisk, byte[] chavePublica, String nomeProjecto,
+            String serialCPU, String serialDisk, String nomeProjecto,
             String email, String nome, String numTelemovel, String cc, String dataInicio, String dataFinal) {
         this.nomeProjecto = nomeProjecto;
         this.email = email;
-        this.nome = nome;
+        this.nomeCC = nome;
         this.numTelemovel = numTelemovel;
-        this.cc = cc;
+        this.numeroCC = cc;
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
         this.hostName = hostName;
@@ -50,6 +50,7 @@ public class Licenca implements java.io.Serializable {
         this.dataFinal=dataFinal;
         this.dataInicio=dataInicio;
     }
+
 
     public String getNomeProjecto() {
         return nomeProjecto;
@@ -68,11 +69,11 @@ public class Licenca implements java.io.Serializable {
     }
 
     public String getNome() {
-        return nome;
+        return nomeCC;
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nomeCC = nome;
     }
 
     public String getNumTelemovel() {
@@ -84,11 +85,11 @@ public class Licenca implements java.io.Serializable {
     }
 
     public String getCc() {
-        return cc;
+        return numeroCC;
     }
 
     public void setCc(String cc) {
-        this.cc = cc;
+        this.numeroCC = cc;
     }
 
     public String getDataInicio() {
@@ -105,14 +106,6 @@ public class Licenca implements java.io.Serializable {
 
     public void setDataValidade(String dataFinal) {
         this.dataFinal = dataFinal;
-    }
-
-    public String getFraseRandom() {
-        return fraseRandom;
-    }
-
-    public void setFraseRandom(String fraseRandom) {
-        this.fraseRandom = fraseRandom;
     }
 
 }

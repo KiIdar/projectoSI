@@ -198,7 +198,7 @@ public class Protecao {
         validador.isValidNumTelemovel(numTelemovel);
 
         Licenca licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
-                cpu.getCPUSerial(), dr.getSerialDisk(), chave, email, nome, dcc.getNome(), numTelemovel, dcc.getCC(),
+                cpu.getCPUSerial(), dr.getSerialDisk(), email, nome, dcc.getNome(), numTelemovel, dcc.getCC(),
                 datas.getDataAtual(), datas.getDataFinal(dias));
 
         Ficheiros ficheiros = new Ficheiros();
