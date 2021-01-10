@@ -34,8 +34,7 @@ public class GestorLicencas {
         CBC cbc = new CBC();
         byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
         byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
-        byte[] test = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\test.txt"), keyPair.getPrivate());
-        System.out.println("hi - " + new String(test));
+
 
 //        Licenca licenca = cbc.decrypt(chave, iv);
         Assinatura assinatura = new Assinatura();
