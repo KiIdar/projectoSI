@@ -14,13 +14,12 @@ import java.util.Date;
  */
 public class Licenca implements java.io.Serializable {
 
-    private byte[] chavePublica;
     //info do PC ainda tenho que ver qual queremos
     private String nomeProjecto;
     private String email;
-    private String nome;
+    private String nomeCC;
     private String numTelemovel;
-    private String cc;
+    private String numeroCC;
     private String ipAddress;
     private String macAddress;
     private String hostName;
@@ -32,17 +31,15 @@ public class Licenca implements java.io.Serializable {
     //Tem de ser strings por causa dos emtodos
     private String dataInicio;
     private String dataFinal;
-    private String fraseRandom;
 
     public Licenca(String ipAddress, String macAddress, String hostName, String serialMB,
-            String serialCPU, String serialDisk, byte[] chavePublica, String nomeProjecto,
+            String serialCPU, String serialDisk, String nomeProjecto,
             String email, String nome, String numTelemovel, String cc, String dataInicio, String dataFinal) {
-        this.chavePublica = chavePublica;
         this.nomeProjecto = nomeProjecto;
         this.email = email;
-        this.nome = nome;
+        this.nomeCC = nome;
         this.numTelemovel = numTelemovel;
-        this.cc = cc;
+        this.numeroCC = cc;
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
         this.hostName = hostName;
@@ -53,13 +50,6 @@ public class Licenca implements java.io.Serializable {
         this.dataInicio=dataInicio;
     }
 
-    public byte[] getChavePublica() {
-        return chavePublica;
-    }
-
-    public void setChavePublica(byte[] chavePublica) {
-        this.chavePublica = chavePublica;
-    }
 
     public String getNomeProjecto() {
         return nomeProjecto;
@@ -78,11 +68,11 @@ public class Licenca implements java.io.Serializable {
     }
 
     public String getNome() {
-        return nome;
+        return nomeCC;
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nomeCC = nome;
     }
 
     public String getNumTelemovel() {
@@ -94,11 +84,11 @@ public class Licenca implements java.io.Serializable {
     }
 
     public String getCc() {
-        return cc;
+        return numeroCC;
     }
 
     public void setCc(String cc) {
-        this.cc = cc;
+        this.numeroCC = cc;
     }
 
     public String getDataInicio() {
@@ -115,14 +105,6 @@ public class Licenca implements java.io.Serializable {
 
     public void setDataValidade(String dataFinal) {
         this.dataFinal = dataFinal;
-    }
-
-    public String getFraseRandom() {
-        return fraseRandom;
-    }
-
-    public void setFraseRandom(String fraseRandom) {
-        this.fraseRandom = fraseRandom;
     }
 
 }
