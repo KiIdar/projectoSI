@@ -6,13 +6,20 @@
 package gestorlicencas;
 
 import Licenca.Licenca;
+import static gestorlicencas.teste.verificarCertificado;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyStore;
@@ -44,21 +51,23 @@ import java.security.cert.TrustAnchor;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import static sun.security.krb5.Confounder.bytes;
 
 /**
  *
@@ -67,12 +76,110 @@ import static sun.security.krb5.Confounder.bytes;
 public class Assinatura {
 
     private Provider ccProvider;
-    private KeyStore ks;
+    private final KeyStore ks;
 
-    public Assinatura() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+    public Assinatura() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
+
         this.ccProvider = Security.getProvider("SunPKCS11-CartaoCidadao");
         this.ks = KeyStore.getInstance("PKCS11", ccProvider);
         this.ks.load(null, null);
+
+    }
+
+    public static void verificarCertificado(X509Certificate cer) {
+        try {
+            cer.checkValidity();
+            System.out.println("certificado valido");
+        } catch (Exception e) {
+            System.out.println("certificado inválido");
+        }
+    }
+
+    private Licenca decryptLicenca(SealedObject sealedObject, Cipher cipher) {
+        CBC cbc = new CBC();
+        Licenca licenca = null;
+        try {
+            licenca = cbc.decrypt(cipher, sealedObject);
+        } catch (IOException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidAlgorithmParameterException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return licenca;
+    }
+
+    public SignedObject signLicenca(SealedObject sealedObject,byte[] chave, byte[] iv) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InvalidKeyException, SignatureException, CertificateException, NoSuchPaddingException, InvalidAlgorithmParameterException {
+        SignedObject signedObject = null;
+
+        /*KeyPair k = KeyStorage.getKeys("keystore.jks", , "nome");
+        //chave privada do gestorLicenca
+        PrivateKey privateKey = KeyFactory.getInstance("RSA").generatePrivate(new X509EncodedKeySpec(k.getPrivate().getEncoded()));
+        //Afinal o provider na assinatura.getInstance é para que mesmo???
+        Signature sig = Signature.getInstance("SHA256withRSA"); // <--- aqui estava ("SHA256withRSA","SHA256withRSA", this.ccProvider)
+
+        signedObject = new SignedObject(sealedObject, privateKey, sig);
+         */
+        Ficheiros f = new Ficheiros();
+        KeyPair k = KeyStorage.getKeys("keystore.jks", "123456", "nome");
+        System.out.println("Privada:" + k.getPrivate().getEncoded());
+        System.out.println("Publica:" + k.getPublic().getEncoded());
+        System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));
+
+        Signature signature = Signature.getInstance("SHA1withRSA");
+        signature.initSign(k.getPrivate());
+
+        signedObject = new SignedObject(sealedObject, k.getPrivate(), signature);
+             
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+        SecretKey key = new SecretKeySpec(chave, "AES");
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
+        File file = new File("LicencaOficial\\licenca.aes");
+        file.getParentFile().mkdirs();
+        FileOutputStream fos = new FileOutputStream(file);
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+        CipherOutputStream cos = new CipherOutputStream(bos, cipher);
+        ObjectOutputStream oos = new ObjectOutputStream(cos);
+        oos.writeObject(signedObject);
+        oos.close();
+        fos.close();
+        bos.close();
+        cos.close();
+        
+        //signature.update(sealedObject);
+        byte[] assinatura = signature.sign();
+
+        //signature.initVerify(k.getPublic());
+        //signature.update(sealedObject);
+        /*if (signature.verify(assinatura)) {
+            //Mensagem assinada corretamente
+            System.out.println("Assinatura válida!");
+
+            CertificateFactory fact = CertificateFactory.getInstance("X.509");
+
+            FileInputStream is = new FileInputStream("certificadoKeyStore.cer");
+
+            X509Certificate certificado = (X509Certificate) fact.generateCertificate(is);
+
+            verificarCertificado(certificado);
+
+        } else {
+            //Mensagem não pode ser validada
+            System.out.println("Assinatura inválida!");
+        }*/
+
+        return signedObject;
     }
 
     public Licenca getLicenca() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, InvalidKeyException, SignatureException, ClassNotFoundException, NoSuchPaddingException, InvalidAlgorithmParameterException, CertificateException, KeyStoreException {
@@ -181,45 +288,6 @@ public class Assinatura {
 
     public PublicKey getPublicKey(Certificate cer) {
         return cer.getPublicKey();
-    }
-
-    private Licenca decryptLicenca(SealedObject sealedObject, Cipher cipher) {
-        CBC cbc = new CBC();
-        Licenca licenca = null;
-        try {
-            licenca = cbc.decrypt(cipher, sealedObject);
-        } catch (IOException ex) {
-            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchPaddingException ex) {
-            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
-            Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return licenca;
-    }
-
-    public SignedObject signLicenca(SealedObject sealedObject) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InvalidKeyException, SignatureException {
-        SignedObject signedObject = null;
-
-        KeyPair k = KeyStorage.getKeys("keystore.jks", "123456", "nome");
-        //chave privada do gestorLicenca
-        PrivateKey privateKey = KeyFactory.getInstance("RSA").generatePrivate(new X509EncodedKeySpec(k.getPrivate().getEncoded()));
-        //Afinal o provider na assinatura.getInstance é para que mesmo???
-        Signature sig = Signature.getInstance("SHA256withRSA"); // <--- aqui estava ("SHA256withRSA","SHA256withRSA", this.ccProvider)
-
-        signedObject = new SignedObject(sealedObject, privateKey, sig);
-
-        return signedObject;
     }
 
 }

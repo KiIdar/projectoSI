@@ -254,8 +254,7 @@ public class CBC {
 
     }
 
-    public SealedObject encryptLicenca(Licenca licenca, byte[] chave, byte[] iv) throws NoSuchAlgorithmException , NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IOException, IllegalBlockSizeException
-    {
+    public SealedObject encryptLicenca(Licenca licenca, byte[] chave, byte[] iv) throws NoSuchAlgorithmException , NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IOException, IllegalBlockSizeException{
         SealedObject sealedObject = null;
         SecretKey key = new SecretKeySpec(chave, "AES");
 
@@ -264,6 +263,7 @@ public class CBC {
         cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
         
         sealedObject = new SealedObject(licenca, cipher);
+        
         return sealedObject;
     }
 }

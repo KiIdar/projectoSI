@@ -121,9 +121,7 @@ public class Assinatura {
         Certificate cer = uc.getPublicCertificate();
         if (!new File("certificadoChavePublica.cer").exists()) {
             writeToFile("certificadoChavePublica.cer", cer.getEncoded());
-        } else {
-            byte[] ccp = readFromFile("certificadoChavePublica.cer");
-        }
+        } 
 
         //Pega na chave publica
         PublicKey pk = uc.getPublicKey(cer);

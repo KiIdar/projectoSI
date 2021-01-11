@@ -48,6 +48,8 @@ public class KeyStorage {
             if (key instanceof PrivateKey) {
                 // Get certificate of public key
                 Certificate cert = keystore.getCertificate(alias);
+                Ficheiros f = new Ficheiros();
+                f.escreverFicheiro("LicencaOficial\\certificadoKeyStore.cer", cert.getEncoded());
                 
                 // Get public key
                 PublicKey publicKey = cert.getPublicKey();
