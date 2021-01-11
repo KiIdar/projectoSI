@@ -4,11 +4,21 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import Licenca.Licenca;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
+import java.security.KeyStoreException;
 import java.security.PublicKey;
+import java.security.SignatureException;
+import java.security.SignedObject;
+import java.security.cert.CertificateException;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SealedObject;
 
 public class GestorLicencas {
 
@@ -27,7 +37,7 @@ public class GestorLicencas {
        
        GestorLicencas gl = new GestorLicencas();
        
-       gl.enviarLicenca();
+       gl.enviarLicenca(licenca);
        
        
        
@@ -36,20 +46,25 @@ public class GestorLicencas {
         System.out.println("debugg point here");
     }
     
-    public void enviarLicenca() throws NoSuchAlgorithmException{
+    public void enviarLicenca(Licenca licenca) throws NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, InvalidKeySpecException, SignatureException{
         CBC cbc = new CBC();
         Assimetrica assimetrica = new Assimetrica();
         Ficheiros f = new Ficheiros();
+        Assinatura assinatura = new Assinatura();
         
         byte[] chave = cbc.generateKey();
         byte[] iv = cbc.generateIV();
+        //TODO guardar isto numa chave assimetrica usando a chave publica da calculadora
         
         KeyPair k = KeyStorage.getKeys("keystore.jks", "123456", "nome");
         System.out.println("Privada:"+k.getPrivate().getEncoded());
         System.out.println("Publica:"+k.getPublic().getEncoded());
         System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));
         
+        SealedObject sealedObject = cbc.encryptLicenca(licenca, chave, iv);
+        SignedObject signedObject = assinatura.signLicenca(sealedObject);
         
+        //TODO guardar o signedObject e qualquer outra coisa que falta, que nao tenho 100% certeza por isso falo contigo
     }
     
 }

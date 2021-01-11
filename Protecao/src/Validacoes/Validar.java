@@ -52,34 +52,13 @@ public class Validar {
     }
 
     public SignedObject getSignatureOfData(SealedObject licenca) throws KeyStoreException, NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnrecoverableKeyException, IOException, InvalidKeySpecException, ClassNotFoundException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, CertificateException {
-        System.out.println("chegou");
+        SignedObject signedobject = null;
 
         PrivateKey pk = (PrivateKey) ks.getKey("CITIZEN AUTHENTICATION CERTIFICATE", null);
         Signature sig = Signature.getInstance("SHA256withRSA", this.ccProvider);
 
-       SignedObject signedobject = new SignedObject(licenca, pk, sig);
+        signedobject = new SignedObject(licenca, pk, sig);
 
-        /////////////testar/////////        
-        PublicKey publicKey = reconstruct_public_key("RSA", f.lerFicheiro("ToSend\\chavePublica.txt"));
-        Signature sig2 = Signature.getInstance("SHA256withRSA");
-        boolean verified = signedobject.verify(publicKey, sig2);
-        System.out.println("Is signed Object verified = " + verified);
-        //Get Object
-        Assimetrica assimetrica = new Assimetrica();
-        KeyPair keyPair = assimetrica.getKeyPair();
-        CBC cbc = new CBC();
-        byte[] iv = assimetrica.decrypt(f.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
-        byte[] chave = assimetrica.decrypt(f.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
-        
-        SecretKey key = new SecretKeySpec(chave, "AES");
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-        SealedObject sealedObject = (SealedObject) signedobject.getObject();
-        
-        Licenca licencaTest = cbc.decrypt(cipher, sealedObject);
-
-        System.out.println("debugg point here");
-        ////////////////////////////
         return signedobject;
 
         /*sig.initSign(pk); //chave privada

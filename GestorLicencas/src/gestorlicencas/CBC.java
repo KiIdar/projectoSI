@@ -40,6 +40,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
 import Licenca.Licenca;
+import java.security.KeyPair;
 
 /**
  *
@@ -215,7 +216,7 @@ public class CBC {
         SecretKey key = new SecretKeySpec(chave, algoritmo);
         // Create cipher
         Cipher cipher = Cipher.getInstance(algcript);
-        
+
         cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
 
         SealedObject sealedObject = new SealedObject(object, cipher);
@@ -236,20 +237,33 @@ public class CBC {
 
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 
-
         CipherInputStream cipherInputSteam = new CipherInputStream(new BufferedInputStream(new FileInputStream("ToSend\\licenca.aes")), cipher);
         ObjectInputStream inputStream = new ObjectInputStream(cipherInputSteam);
         SealedObject sealedObject = (SealedObject) inputStream.readObject();
-        Licenca test = new Licenca(null, null, null, null, null,null, null, null, null, null, null,null,null);
+        Licenca test = new Licenca(null, null, null, null, null, null, null, null, null, null, null, null, null);
         Licenca licenca = (Licenca) sealedObject.getObject(cipher);
         return licenca;
 
     }
+
     public Licenca decrypt(Cipher cipher, SealedObject sealedObject) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException {
-        
+
         Licenca licenca = (Licenca) sealedObject.getObject(cipher);
         System.out.println("Licenca email = " + licenca.getCc());
         return licenca;
 
     }
-         }
+
+    public SealedObject encryptLicenca(Licenca licenca, byte[] chave, byte[] iv) throws NoSuchAlgorithmException , NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IOException, IllegalBlockSizeException
+    {
+        SealedObject sealedObject = null;
+        SecretKey key = new SecretKeySpec(chave, "AES");
+
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
+        
+        sealedObject = new SealedObject(licenca, cipher);
+        return sealedObject;
+    }
+}

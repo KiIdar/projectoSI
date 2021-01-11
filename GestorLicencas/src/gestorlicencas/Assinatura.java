@@ -18,6 +18,7 @@ import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Security;
@@ -57,6 +58,7 @@ import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import static sun.security.krb5.Confounder.bytes;
 
 /**
  *
@@ -204,6 +206,20 @@ public class Assinatura {
             Logger.getLogger(Assinatura.class.getName()).log(Level.SEVERE, null, ex);
         }
         return licenca;
+    }
+
+    public SignedObject signLicenca(SealedObject sealedObject) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InvalidKeyException, SignatureException {
+        SignedObject signedObject = null;
+
+        KeyPair k = KeyStorage.getKeys("keystore.jks", "123456", "nome");
+        //chave privada do gestorLicenca
+        PrivateKey privateKey = KeyFactory.getInstance("RSA").generatePrivate(new X509EncodedKeySpec(k.getPrivate().getEncoded()));
+        //Afinal o provider na assinatura.getInstance é para que mesmo???
+        Signature sig = Signature.getInstance("SHA256withRSA"); // <--- aqui estava ("SHA256withRSA","SHA256withRSA", this.ccProvider)
+
+        signedObject = new SignedObject(sealedObject, privateKey, sig);
+
+        return signedObject;
     }
 
 }
