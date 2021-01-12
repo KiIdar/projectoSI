@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -54,8 +56,12 @@ public class Ficheiros {
 
     public boolean checkExistsLicence()
     {
-        File myObj = new File("ToSend\\licenca.aes");
+        File myObj = new File("LicencaOficial\\licenca.aes");
         System.out.println(myObj.getAbsolutePath()); 
+        
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        System.out.println("Current relative path is: " + s);
         
         if (myObj.exists()) {
             return true;

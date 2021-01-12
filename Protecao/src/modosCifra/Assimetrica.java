@@ -126,5 +126,23 @@ public class Assimetrica {
         }
         return plainText;
     }
+    
+    public static byte[] decryptPub(byte[] byteText, PublicKey key) throws NoSuchAlgorithmException, NoSuchPaddingException {
+        Cipher decriptCipher = Cipher.getInstance("RSA");
+        try {
+            decriptCipher.init(Cipher.DECRYPT_MODE, key);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(Assimetrica.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        byte[] plainText = null;
+        try {
+            plainText = decriptCipher.doFinal(byteText);
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(Assimetrica.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(Assimetrica.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return plainText;
+    }
 
 }

@@ -39,7 +39,7 @@ public class GestorLicencas {
 
         GestorLicencas gl = new GestorLicencas();
 
-        //gl.enviarLicenca(licenca);
+        gl.enviarLicenca(licenca);
         //usei o debugg para ver de maneira facil a variavel licenca, está cá tudo o que mandei
         System.out.println("debugg point here");
     }
@@ -58,6 +58,12 @@ public class GestorLicencas {
         System.out.println("Privada:" + k.getPrivate().getEncoded());
         System.out.println("Publica:" + k.getPublic().getEncoded());
         System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));
+        
+        /*
+        KeyPair k = KeyStorage.getKeys("chavesCliente.jks", "123456", "nomes");
+        System.out.println("Privada:" + k.getPrivate().getEncoded());
+        System.out.println("Publica:" + k.getPublic().getEncoded());
+        System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));*/
 
         SealedObject sealedObject = cbc.encryptLicenca(licenca, chave, iv);
         SignedObject signedObject = assinatura.signLicenca(sealedObject, chave, iv);

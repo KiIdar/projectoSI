@@ -112,7 +112,7 @@ public class Calculadora {
         //escrever licença e ler
         
         
-        protecao.instanciarLicenca(5);
+        //protecao.instanciarLicenca(5);
         //protecao.criarLicenca();
         //protecao.testarAssimetrica();
         //protecao.test();

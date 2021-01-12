@@ -6,7 +6,6 @@
 package gestorlicencas;
 
 import Licenca.Licenca;
-import static gestorlicencas.teste.verificarCertificado;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -80,13 +79,15 @@ public class Assinatura {
 
     public Assinatura() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
 
-        /*this.provider = Security.getProvider("SunPKCS11");
+        this.provider = Security.getProvider("SunPKCS11-CartaoCidadao");
         this.ks = KeyStore.getInstance("PKCS11", provider);
-        this.ks.load(null, "123456".toCharArray());*/
+        this.ks.load(null, null);
+                
+        /*this.ks.load(null, "123456".toCharArray());
         FileInputStream is = new FileInputStream("keystore.jks");
         ks = KeyStore.getInstance("jks");
         ks.load(is, "123456".toCharArray());
-        System.out.println("sup");
+        System.out.println("sup");*/
     }
 
     public static void verificarCertificado(X509Certificate cer) {

@@ -49,7 +49,7 @@ public class KeyStorage {
                 // Get certificate of public key
                 Certificate cert = keystore.getCertificate(alias);
                 Ficheiros f = new Ficheiros();
-                f.escreverFicheiro("LicencaOficial\\certificadoKeyStore.cer", cert.getEncoded());
+                f.escreverFicheiro("LicencaOficial\\certificadoKeyStores.cer", cert.getEncoded());
                 
                 // Get public key
                 PublicKey publicKey = cert.getPublicKey();

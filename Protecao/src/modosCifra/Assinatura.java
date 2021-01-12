@@ -107,15 +107,14 @@ public class Assinatura {
 
     }
 
-    public void fazAssintura() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, InvalidKeyException, SignatureException, UnrecoverableKeyException {
+    public void fazAssintura(byte[] bytesToSign) throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, InvalidKeyException, SignatureException, UnrecoverableKeyException {
         System.out.println("Ficheiro a ser gerado...");
         //Cria o ficheiro com este texto
-        String texto = "texto a testar..";
-        writeToFile("texto", texto.getBytes());
+        writeToFile("texto", bytesToSign);
         Assinatura uc = new Assinatura();
 
         //cria o ficheiro assinatura e cifra o texto com a chave privada
-        writeToFile("AssinaturaFicheiro", uc.getSignatureOfData(texto.getBytes()));
+        writeToFile("AssinaturaFicheiro", uc.getSignatureOfData(bytesToSign));
 
         //certificado
         Certificate cer = uc.getPublicCertificate();
@@ -191,7 +190,6 @@ public class Assinatura {
             System.out.println("Certificado invalido");
         }
         
-        //verificarCertificado(certificado);
         //Fim da validação em cadeias de certificados
         //signature
         byte[] mysignatureread = readFromFile("AssinaturaFicheiro");
@@ -215,17 +213,6 @@ public class Assinatura {
 
             System.out.println("signature verifies: " + verifies);
             System.out.println("data : " + bytesToString(data));
-        }
-    }
-
-    //Não usado mas deixar
-    public static void verificarCertificado(X509Certificate cer) {
-        try {
-            //cer.checkValidity(new Date(1990, 1, 1)); //data que permite fazer com que o certificado fique inválido
-            cer.checkValidity();
-            System.out.println("certificado valido");
-        } catch (Exception e) {
-            System.out.println("certificado inválido");
         }
     }
 
