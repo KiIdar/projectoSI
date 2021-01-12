@@ -10,6 +10,7 @@ import InformacaoSistema.hostName;
 import InformacaoSistema.getIp;
 import InformacaoSistema.getMac;
 import InformacaoSistema.motherBoard;
+import KeyStorage.KeyStorage;
 import Licenca.Licenca;
 import Validacoes.Validar;
 import static Validacoes.Validar.writeToFile;
@@ -54,6 +55,7 @@ import java.security.cert.TrustAnchor;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -181,8 +183,8 @@ public class Protecao {
 
                 Assimetrica assimetrica = new Assimetrica();
 
-                byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\iv"), geraParChaves().getPrivate());
-                byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\chaveSimetrica"), geraParChaves().getPrivate());
+                byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\iv"), getPrivate());
+                byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\chaveSimetrica"), getPrivate());
                 
                 SecretKey key = new SecretKeySpec(chave, "AES");
                 Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
@@ -368,5 +370,13 @@ public class Protecao {
 
         cbc.encrypt(licenca, chave, iv);
 
+    }
+
+    private PrivateKey getPrivate() {
+        
+        KeyPair k = KeyStorage.getKeys("chavesCliente.jks", "123456", "nome");
+        System.out.println("Privada:" + k.getPrivate().getEncoded());
+        PrivateKey privateKey = k.getPrivate();
+        return privateKey;
     }
 }

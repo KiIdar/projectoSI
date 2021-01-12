@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gestorlicencas;
+package KeyStorage;
 
+import Ficheiros.Ficheiros;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,7 +50,10 @@ public class KeyStorage {
                 // Get certificate of public key
                 Certificate cert = keystore.getCertificate(alias);
                 Ficheiros f = new Ficheiros();
-                f.escreverFicheiro("LicencaOficial\\certificadoKeyStores.cer", cert.getEncoded());
+                //Causei erro aqui deprepósito para veres esta mensagem
+                //Aqui a gente só quer ir buscar a chave privada do KeyStore 
+                //Então porque é que estamos a guardar um certeficado? O_O não entendi
+                f.escrverFicheiro("LicencaOficial\\certificadoKeyStores.cer", cert.getEncoded());
                 
                 // Get public key
                 PublicKey publicKey = cert.getPublicKey();

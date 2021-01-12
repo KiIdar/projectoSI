@@ -81,20 +81,17 @@ public class Assinatura {
 
         this.provider = Security.getProvider("SunPKCS11-CartaoCidadao");
         this.ks = KeyStore.getInstance("PKCS11", provider);
-<<<<<<< Updated upstream
         this.ks.load(null, null);
-                
+
         /*this.ks.load(null, "123456".toCharArray());
         FileInputStream is = new FileInputStream("keystore.jks");
         ks = KeyStore.getInstance("jks");
         ks.load(is, "123456".toCharArray());
-        System.out.println("sup");*/
-=======
-        this.ks.load(null, null);*/
+        System.out.println("sup");
+        this.ks.load(null, null);  */
         FileInputStream is = new FileInputStream("keystore.jks");
         ks = KeyStore.getInstance("jks");
         ks.load(is, "123456".toCharArray());
->>>>>>> Stashed changes
     }
 
     public static void verificarCertificado(X509Certificate cer) {
