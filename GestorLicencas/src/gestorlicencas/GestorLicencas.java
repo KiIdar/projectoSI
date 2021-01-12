@@ -39,8 +39,7 @@ public class GestorLicencas {
 
         GestorLicencas gl = new GestorLicencas();
 
-        gl.enviarLicenca(licenca);
-
+        //gl.enviarLicenca(licenca);
         //usei o debugg para ver de maneira facil a variavel licenca, está cá tudo o que mandei
         System.out.println("debugg point here");
     }

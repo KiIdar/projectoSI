@@ -75,15 +75,18 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class Assinatura {
 
-    private Provider ccProvider;
-    private final KeyStore ks;
+    private Provider provider;
+    private KeyStore ks;
 
     public Assinatura() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
 
-        this.ccProvider = Security.getProvider("SunPKCS11-CartaoCidadao");
-        this.ks = KeyStore.getInstance("PKCS11", ccProvider);
-        this.ks.load(null, null);
-
+        /*this.provider = Security.getProvider("SunPKCS11");
+        this.ks = KeyStore.getInstance("PKCS11", provider);
+        this.ks.load(null, "123456".toCharArray());*/
+        FileInputStream is = new FileInputStream("keystore.jks");
+        ks = KeyStore.getInstance("jks");
+        ks.load(is, "123456".toCharArray());
+        System.out.println("sup");
     }
 
     public static void verificarCertificado(X509Certificate cer) {
@@ -120,7 +123,7 @@ public class Assinatura {
         return licenca;
     }
 
-    public SignedObject signLicenca(SealedObject sealedObject,byte[] chave, byte[] iv) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InvalidKeyException, SignatureException, CertificateException, NoSuchPaddingException, InvalidAlgorithmParameterException {
+    public SignedObject signLicenca(SealedObject sealedObject, byte[] chave, byte[] iv) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException, InvalidKeyException, SignatureException, CertificateException, NoSuchPaddingException, InvalidAlgorithmParameterException {
         SignedObject signedObject = null;
 
         /*KeyPair k = KeyStorage.getKeys("keystore.jks", , "nome");
@@ -141,7 +144,7 @@ public class Assinatura {
         signature.initSign(k.getPrivate());
 
         signedObject = new SignedObject(sealedObject, k.getPrivate(), signature);
-             
+
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
         SecretKey key = new SecretKeySpec(chave, "AES");
         cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
@@ -156,7 +159,7 @@ public class Assinatura {
         fos.close();
         bos.close();
         cos.close();
-        
+
         //signature.update(sealedObject);
         byte[] assinatura = signature.sign();
 
@@ -178,7 +181,6 @@ public class Assinatura {
             //Mensagem não pode ser validada
             System.out.println("Assinatura inválida!");
         }*/
-
         return signedObject;
     }
 
