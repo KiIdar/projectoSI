@@ -89,9 +89,9 @@ public class Assinatura {
         ks.load(is, "123456".toCharArray());
         System.out.println("sup");
         this.ks.load(null, null);  */
-        FileInputStream is = new FileInputStream("keystore.jks");
+       /* FileInputStream is = new FileInputStream("keystore.jks");
         ks = KeyStore.getInstance("jks");
-        ks.load(is, "123456".toCharArray());
+        ks.load(is, "123456".toCharArray());*/
     }
 
     public static void verificarCertificado(X509Certificate cer) {
