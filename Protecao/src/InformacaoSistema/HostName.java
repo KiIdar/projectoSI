@@ -11,7 +11,7 @@ import java.net.InetAddress;
  *
  * @author Utilizador
  */
-public class hostName {
+public class HostName {
     String hostname = "";
 
     public final String getHost() {
@@ -26,7 +26,7 @@ public class hostName {
     }
     
     public static void main(String[] args) {
-        hostName hn = new hostName();
+        HostName hn = new HostName();
         System.out.println("HostName: " + hn.getHost() );
     }
 }

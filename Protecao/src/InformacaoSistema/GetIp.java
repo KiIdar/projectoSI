@@ -16,7 +16,7 @@ import javax.crypto.Mac;
  *
  * @author Utilizador
  */
-public class getIp {
+public class GetIp {
     
     public String getIp() {
         try {
@@ -30,7 +30,7 @@ public class getIp {
     }
 
     public static void main(String[] args) throws SocketException {
-        getIp mac = new getIp();
+        GetIp mac = new GetIp();
         System.out.println("Ip: "+mac.getIp());
         System.out.println("Mac: ");
     }

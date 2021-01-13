@@ -22,12 +22,12 @@ import static javax.swing.JOptionPane.showMessageDialog;
  *
  * @author ASUS
  */
-public class getMac {
+public class GetMac {
 
     public InetAddress valorIp;
     public String nomeSistema, enderecoIp = "", enderecoMac = "";
 
-    public getMac() {
+    public GetMac() {
         nomeSistema = System.getProperty("os.name");
     }
 
@@ -61,7 +61,7 @@ public class getMac {
     }
 
     public static void main(String[] args) {
-        getMac mac = new getMac();
+        GetMac mac = new GetMac();
         System.out.println("MAC: " + mac.getMac());
     }
 }

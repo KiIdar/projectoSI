@@ -26,38 +26,6 @@ public class Calculadora {
        
         if(protecao.isRegistered())
         {
-            System.out.println("You got it!");
-        }
-        else
-        {
-           if(protecao.startRegistration())
-           {
-               System.out.println("Registration successfull!");
-           }
-           else
-           {
-               System.out.println("Something went wrong.");
-           }
-        }
-
-        //Perguntas utilizador
-        /*
-            validarPerguntas v = new validarPerguntas();
-            
-            String email="";
-            String nome="";
-            String numTelemovel="";
-            String cc = "";
-            
-            v.isValidNome(nome);
-            v.isValidNumTelemovel(numTelemovel);
-            v.isValidCC(cc);
-            v.isValidEmail(email);
-         */
-        /**
-         * ********************************************************
-         */
-        /*
             System.out.print("Enter two numbers: ");
             
             // nextDouble() reads the next double from the keyboard
@@ -92,7 +60,35 @@ public class Calculadora {
             return;
             }
             
-            System.out.println(first + " " + operator + " " + second + " = " + result);*/
+            System.out.println(first + " " + operator + " " + second + " = " + result);
+        }
+        else
+        {
+           if(protecao.startRegistration())
+           {
+               System.out.println("Por favor enviar o pedido de licença ao Gestor de licenças!");
+           }
+           else
+           {
+               System.out.println("Algo correu mal durante a criação do pedido de licença");
+           }
+        }
+
+        //Perguntas utilizador
+        /*
+            validarPerguntas v = new validarPerguntas();
+            
+            String email="";
+            String nome="";
+            String numTelemovel="";
+            String cc = "";
+            
+            v.isValidNome(nome);
+            v.isValidNumTelemovel(numTelemovel);
+            v.isValidCC(cc);
+            v.isValidEmail(email);
+         */
+
         //Biblioteca adicionada e testtada
         //protecao.getPCInfo();
         //-------------------------------------------------------------------//

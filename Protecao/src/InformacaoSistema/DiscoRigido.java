@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author ASUS
  */
-public class discoRigido {
+public class DiscoRigido {
 
     public String getSerialDisk() {
 
@@ -46,9 +46,9 @@ public class discoRigido {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(discoRigido.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiscoRigido.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
-            Logger.getLogger(discoRigido.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiscoRigido.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return line;
@@ -72,15 +72,15 @@ public class discoRigido {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(discoRigido.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiscoRigido.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
-            Logger.getLogger(discoRigido.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiscoRigido.class.getName()).log(Level.SEVERE, null, ex);
         }
         return systemId;
     }
 
     public static void main(String[] args) {
-        discoRigido d = new discoRigido();
+        DiscoRigido d = new DiscoRigido();
         System.out.println("Serial:"+d.getSerialDisk());
         System.out.println("te"+d.getSystemIdList());
     }

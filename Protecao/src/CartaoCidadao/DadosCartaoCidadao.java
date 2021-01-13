@@ -7,7 +7,7 @@ import java.security.cert.Certificate;
 import java.util.Arrays;
 import java.util.Enumeration;
 
-public class dadosCartaoCidadao {
+public class DadosCartaoCidadao {
 
     String cc[];
     String nome[];
@@ -51,7 +51,7 @@ public class dadosCartaoCidadao {
 
     //Teste
     public static void main(String[] args) throws Exception {
-        dadosCartaoCidadao d = new dadosCartaoCidadao();
+        DadosCartaoCidadao d = new DadosCartaoCidadao();
         //d.providers();
         System.out.println("CC:" + d.getCC());
         System.out.println("Nome:" + d.getNome());

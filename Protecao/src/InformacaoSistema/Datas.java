@@ -18,7 +18,7 @@ import java.util.GregorianCalendar;
  *
  * @author ASUS
  */
-public class datas {
+public class Datas {
 
     public String getDataAtual() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -37,7 +37,7 @@ public class datas {
     }
 
     public static void main(String[] args) {
-        datas d = new datas();
+        Datas d = new Datas();
         System.out.println("Data atual: " + d.getDataAtual());
         System.out.println("Data final: "+d.getDataFinal(10));
 

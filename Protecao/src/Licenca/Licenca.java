@@ -51,6 +51,79 @@ public class Licenca implements java.io.Serializable {
         this.dataInicio=dataInicio;
     }
 
+    public String getSerialMB() {
+        return serialMB;
+    }
+
+    public void setSerialMB(String serialMB) {
+        this.serialMB = serialMB;
+    }
+
+    public String getNomeCC() {
+        return nomeCC;
+    }
+
+    public void setNomeCC(String nomeCC) {
+        this.nomeCC = nomeCC;
+    }
+
+    public String getNumeroCC() {
+        return numeroCC;
+    }
+
+    public void setNumeroCC(String numeroCC) {
+        this.numeroCC = numeroCC;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public String getSerialCPU() {
+        return serialCPU;
+    }
+
+    public void setSerialCPU(String serialCPU) {
+        this.serialCPU = serialCPU;
+    }
+
+    public String getSerialDisk() {
+        return serialDisk;
+    }
+
+    public void setSerialDisk(String serialDisk) {
+        this.serialDisk = serialDisk;
+    }
+
+    public String getDataFinal() {
+        return dataFinal;
+    }
+
+    public void setDataFinal(String dataFinal) {
+        this.dataFinal = dataFinal;
+    }
+
+    
 
     public String getNomeProjecto() {
         return nomeProjecto;

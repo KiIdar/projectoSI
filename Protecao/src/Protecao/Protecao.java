@@ -1,15 +1,15 @@
 package Protecao;
 
-import CartaoCidadao.dadosCartaoCidadao;
+import CartaoCidadao.DadosCartaoCidadao;
 import Ficheiros.Ficheiros;
 import InfoPessoa.ValidarPerguntas;
-import InformacaoSistema.discoRigido;
-import InformacaoSistema.cpu;
-import InformacaoSistema.datas;
-import InformacaoSistema.hostName;
-import InformacaoSistema.getIp;
-import InformacaoSistema.getMac;
-import InformacaoSistema.motherBoard;
+import InformacaoSistema.DiscoRigido;
+import InformacaoSistema.Cpu;
+import InformacaoSistema.Datas;
+import InformacaoSistema.HostName;
+import InformacaoSistema.GetIp;
+import InformacaoSistema.GetMac;
+import InformacaoSistema.MotherBoard;
 import KeyStorage.KeyStorage;
 import Licenca.Licenca;
 import Validacoes.Validar;
@@ -58,6 +58,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,16 +75,18 @@ import modosCifra.Assimetrica;
 import modosCifra.CBC;
 
 public class Protecao {
-    
-    private Provider provider;
-    private KeyStore ks;
+
+    private final Provider provider;
+    private final KeyStore ks;
+    private Licenca licenca;
 
     public Protecao() throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
 
         this.provider = Security.getProvider("SunPKCS11-CartaoCidadao");
         this.ks = KeyStore.getInstance("PKCS11", provider);
         this.ks.load(null, null);
-                
+        this.licenca = null;
+
         /*this.ks.load(null, "123456".toCharArray());
         FileInputStream is = new FileInputStream("keystore.jks");
         ks = KeyStore.getInstance("jks");
@@ -92,41 +95,52 @@ public class Protecao {
     }
 
     public void init(String app, String versao) {
-        //TODO Criar uma licença temporaria já a meter os valores com o que se tem, neste caso a app e a versão
-        //Não é para criar uma licença aqui em modo de ficheiro, só instanciala com alguns valores para depois a compararmos/criala oficialmente
-        System.out.println("app: " + app + " - versao: " + versao);
-    }
+        HostName hn = new HostName();
+        GetMac mac = new GetMac();
+        GetIp ip = new GetIp();
+        Cpu cpu = new Cpu();
+        DiscoRigido dr = new DiscoRigido();
+        MotherBoard mb = new MotherBoard();
 
-    public static void main(String[] args) throws Exception {
-        Protecao p = new Protecao();
+        DadosCartaoCidadao dcc = new DadosCartaoCidadao();
+        ValidarPerguntas validador = new ValidarPerguntas();
+        Datas datas = new Datas();
 
-        //p.instanciarLicenca(1);
-        p.isRegistered();
+        String email = "";
+        validador.isValidEmail(email);
+
+        String numTelemovel = "";
+        validador.isValidNumTelemovel(numTelemovel);
+
+        try {
+            this.licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
+                    cpu.getCPUSerial(), dr.getSerialDisk(), email, app, dcc.getNome(), numTelemovel, dcc.getCC(),
+                    datas.getDataAtual(), datas.getDataAtual());
+        } catch (Exception ex) {
+            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public PublicKey getPublicKey(Certificate cer) {
         return cer.getPublicKey();
     }
-    
+
     public Certificate getPublicCertificate() throws KeyStoreException {
         return this.ks.getCertificate("CITIZEN AUTHENTICATION CERTIFICATE");
     }
-    
-    
 
-    public boolean isRegistered() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, FileNotFoundException, IOException, ClassNotFoundException, CertificateException, KeyStoreException, CertPathBuilderException, SignatureException {
+    public boolean isRegistered() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, FileNotFoundException, IOException, ClassNotFoundException, CertificateException, KeyStoreException, CertPathBuilderException, SignatureException, CertPathValidatorException {
         Ficheiros ficheiro = new Ficheiros();
         if (ficheiro.checkExistsLicence()) {
             System.out.println("Licenca existe");
             //TODO verificar se é valida
-
+            Licenca licencaOficial = null;
             Protecao uc = new Protecao();
             Signature verificationEngine = Signature.getInstance("SHA256withRSA");
 
             CertificateFactory fact = CertificateFactory.getInstance("X.509");
             FileInputStream is = new FileInputStream("LicencaOficial\\certificadoKeyStores.cer");
             X509Certificate certificado = (X509Certificate) fact.generateCertificate(is);
-/*
             PKIXParameters par = new PKIXParameters(ks);
             for (TrustAnchor ta : par.getTrustAnchors()) {
                 X509Certificate c = ta.getTrustedCert();
@@ -175,7 +189,7 @@ public class Protecao {
                 System.out.println("Certificado Válido");
                 System.out.println("Issuer of trust anchor certificate: "
                         + result.getTrustAnchor().getTrustedCert().getIssuerDN().getName());
-                */
+
                 Certificate cer = uc.getPublicCertificate();
 
                 //Pega na chave publica
@@ -185,7 +199,7 @@ public class Protecao {
 
                 byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\iv"), getPrivate());
                 byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\chaveSimetrica"), getPrivate());
-                
+
                 SecretKey key = new SecretKeySpec(chave, "AES");
                 Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
                 cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
@@ -201,24 +215,25 @@ public class Protecao {
                 System.out.println("cheguei chegando");
                 if (signedObject.verify(uc.getPublicKey(cer), verificationEngine)) {
                     System.out.println("Assinatura valida!");
-                    return true;
+                    licencaOficial = decryptLicenca(sealedObject, cipher);
                 } else {
                     System.out.println("Assinatura não valida!");
                     return false;
                 }
 
-            /*} catch (CertPathValidatorException cpve) {
+            } catch (CertPathValidatorException cpve) {
                 System.out.println("Validation failure, cert[" + cpve.getIndex() + "] :" + cpve.getMessage());
                 return false;
-            }*/
+            }
 
+            return validarDados(licencaOficial);
         } else {
             System.out.println("Licenca não existe");
             return false;
-           
-        }        
+
+        }
     }
-    
+
     private Licenca decryptLicenca(SealedObject sealedObject, Cipher cipher) {
         CBC cbc = new CBC();
         Licenca licenca = null;
@@ -245,7 +260,12 @@ public class Protecao {
     }
 
     public boolean startRegistration() {
-        //TODO Processo de registar e criar uma licença
+        try {
+            instanciarLicenca(5);
+        } catch (Exception ex) {
+            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
         return true;
     }
 
@@ -296,17 +316,17 @@ public class Protecao {
         }
     }*/
     public void getPCInfo() throws IOException, InterruptedException {
-        hostName hostName = new hostName();
+        HostName hostName = new HostName();
         System.out.println("HOSTNAME:" + hostName.getHost());
-        getIp ip = new getIp();
+        GetIp ip = new GetIp();
         System.out.println("IP: " + ip.getIp());
-        getMac mac = new getMac();
+        GetMac mac = new GetMac();
         System.out.println("MAC: " + mac.getMac());
-        cpu cpu = new cpu();
+        Cpu cpu = new Cpu();
         System.out.println("CPU: " + cpu.getCPUSerial());
-        discoRigido dr = new discoRigido();
+        DiscoRigido dr = new DiscoRigido();
         System.out.println("DISK: " + dr.getSerialDisk());
-        motherBoard mb = new motherBoard();
+        MotherBoard mb = new MotherBoard();
         System.out.println("MOTHERBOARD: " + mb.getMotherboardSN());
     }
 
@@ -326,35 +346,15 @@ public class Protecao {
 
     public void instanciarLicenca(int dias) throws Exception {
 
-        hostName hn = new hostName();
-        getMac mac = new getMac();
-        getIp ip = new getIp();
-        cpu cpu = new cpu();
-        discoRigido dr = new discoRigido();
-        motherBoard mb = new motherBoard();
+        Datas datas = new Datas();
 
-        dadosCartaoCidadao dcc = new dadosCartaoCidadao();
-        ValidarPerguntas validador = new ValidarPerguntas();
-        datas datas = new datas();
-
-        //System.out.println(licenca.getCc());
+        //System.out.println(licencaOficial.getCc());
         CBC cbc = new CBC();
         Assimetrica assimetrica = new Assimetrica();
         byte[] chave = cbc.generateKey();
         byte[] iv = cbc.generateIV();
 
-        String email = "";
-        validador.isValidEmail(email);
-
-        String nome = "";
-        validador.isValidNome(nome);
-
-        String numTelemovel = "";
-        validador.isValidNumTelemovel(numTelemovel);
-
-        Licenca licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
-                cpu.getCPUSerial(), dr.getSerialDisk(), email, nome, dcc.getNome(), numTelemovel, dcc.getCC(),
-                datas.getDataAtual(), datas.getDataFinal(dias));
+        this.licenca.setDataFinal(datas.getDataFinal(dias));
 
         Ficheiros ficheiros = new Ficheiros();
 
@@ -368,15 +368,56 @@ public class Protecao {
         PublicKey pk = uc.getPublicKey(cer);
         writeToFile("ToSend\\chavePublica.txt", pk.getEncoded());
 
-        cbc.encrypt(licenca, chave, iv);
+        cbc.encrypt(this.licenca, chave, iv);
 
     }
 
     private PrivateKey getPrivate() {
-        
+
         KeyPair k = KeyStorage.getKeys("chavesCliente.jks", "123456", "nome");
         System.out.println("Privada:" + k.getPrivate().getEncoded());
         PrivateKey privateKey = k.getPrivate();
         return privateKey;
+    }
+
+    private boolean validarDados(Licenca licencaOficial) {
+
+        int contador = 0;
+        Date dataFinal = new Date(licencaOficial.getDataFinal());
+        
+        
+        if (licencaOficial.getIpAddress() != this.licenca.getIpAddress()) {
+            return false;
+        } else if (licencaOficial.getMacAddress() != this.licenca.getMacAddress()) {
+            return false;
+        } else if (licencaOficial.getHostName() != this.licenca.getHostName()) {
+            return false;
+        } else if (licencaOficial.getSerialMB() != this.licenca.getSerialMB()) {
+            contador++;
+        } else if (licencaOficial.getSerialCPU() != this.licenca.getSerialCPU()) {
+            contador++;
+        } else if (licencaOficial.getSerialDisk() != this.licenca.getSerialDisk()) {
+            contador++;
+        } else if (licencaOficial.getEmail() != this.licenca.getEmail()) {
+            return false;
+        } else if (licencaOficial.getNomeProjecto() != this.licenca.getNomeProjecto()) {
+            return false;
+        } else if (licencaOficial.getNomeCC() != this.licenca.getNomeCC()) {
+            return false;
+        } else if (licencaOficial.getNumTelemovel() != this.licenca.getNumTelemovel()) {
+            return false;
+        } else if (licencaOficial.getCc() != this.licenca.getCc()) {
+            return false;
+        } else if (licencaOficial.getDataInicio() != this.licenca.getDataInicio()) {
+            return false;
+        } else if (new Date().after(dataFinal)) {
+            return false;
+        }
+
+        if (contador >= 2) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

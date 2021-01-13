@@ -16,7 +16,7 @@ import java.text.NumberFormat;
  *
  * @author Utilizador
  */
-public class cpu {
+public class Cpu {
 
     public static final String getCPUSerial() throws IOException {
         String os = System.getProperty("os.name");
@@ -69,7 +69,7 @@ public class cpu {
     }
 
     public static void main(String[] args) throws IOException {
-        cpu cpu = new cpu();
+        Cpu cpu = new Cpu();
         System.out.println("Serial da CPU: " + cpu.getCPUSerial());
         System.out.println("----------");
         System.out.println(System.getenv("PROCESSOR_IDENTIFIER"));

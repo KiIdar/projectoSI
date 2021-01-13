@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
  *
  * @author Utilizador
  */
-public class motherBoard {
+public class MotherBoard {
 
     public static String getMotherboardSN() {
         String result = "";
