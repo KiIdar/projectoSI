@@ -50,11 +50,7 @@ public class KeyStorage {
                 // Get certificate of public key
                 Certificate cert = keystore.getCertificate(alias);
                 Ficheiros f = new Ficheiros();
-                //Causei erro aqui deprepósito para veres esta mensagem
-                //Aqui a gente só quer ir buscar a chave privada do KeyStore 
-                //Então porque é que estamos a guardar um certeficado? O_O não entendi
-                f.escrverFicheiro("LicencaOficial\\certificadoKeyStores.cer", cert.getEncoded());
-                
+
                 // Get public key
                 PublicKey publicKey = cert.getPublicKey();
                 
