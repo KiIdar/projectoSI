@@ -69,7 +69,7 @@ public class GestorLicencas {
         System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));*/
 
         SealedObject sealedObject = cbc.encryptLicenca(licenca, chave, iv);
-        SignedObject signedObject = assinatura.signLicenca(sealedObject, chave, iv);
+        assinatura.signLicenca(sealedObject, chave, iv);
 
         KeyFactory kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
         PublicKey publicKey = reconstruct_public_key("RSA", f.lerFicheiro("ToSend\\chavePublica.txt"));

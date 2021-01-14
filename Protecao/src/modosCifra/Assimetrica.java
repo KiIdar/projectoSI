@@ -6,6 +6,7 @@
 package modosCifra;
 
 import Ficheiros.Ficheiros;
+import KeyStorage.KeyStorage;
 import java.io.InputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.security.InvalidKeyException;
@@ -53,9 +54,10 @@ public class Assimetrica {
     }
 
     public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        Ficheiros ficheiro = new Ficheiros();
-        KeyFactory kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
-        PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(ficheiro.lerFicheiro("chave publicaGestor.txt")));
+        KeyPair k = KeyStorage.getKeys("..\\Protecao\\keystore.jks", "123456", "nome");
+        System.out.println("Privada:" + k.getPrivate().getEncoded());
+        System.out.println("Publica:" + k.getPublic().getEncoded());
+        PublicKey publicKey = k.getPublic();
         return publicKey;
     }
 

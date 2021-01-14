@@ -42,8 +42,11 @@ public class Assimetrica {
     public KeyPair getKeyPair() throws NoSuchAlgorithmException, InvalidKeySpecException {
         Ficheiros ficheiro = new Ficheiros();
         KeyFactory kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
-        PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(ficheiro.lerFicheiro("chave privada.txt")));
-        PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(ficheiro.lerFicheiro("chave publica.txt")));
+        KeyPair k = KeyStorage.getKeys("keystore.jks", "123456", "nome");
+        System.out.println("Privada:" + k.getPrivate().getEncoded());
+        System.out.println("Publica:" + k.getPublic().getEncoded());
+        PrivateKey privateKey = k.getPrivate();
+        PublicKey publicKey = k.getPublic();
         KeyPair newKeyPair = new KeyPair(publicKey, privateKey);
         
         return newKeyPair;

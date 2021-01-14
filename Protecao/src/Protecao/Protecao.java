@@ -141,7 +141,7 @@ public class Protecao {
             CertificateFactory fact = CertificateFactory.getInstance("X.509");
             FileInputStream is = new FileInputStream("LicencaOficial\\certificadoKeyStores.cer");
             X509Certificate certificado = (X509Certificate) fact.generateCertificate(is);
-            PKIXParameters par = new PKIXParameters(ks);
+            /*PKIXParameters par = new PKIXParameters(ks);
             for (TrustAnchor ta : par.getTrustAnchors()) {
                 X509Certificate c = ta.getTrustedCert();
                 System.out.println(c.getSubjectDN().getName());
@@ -188,7 +188,7 @@ public class Protecao {
                 result = (PKIXCertPathValidatorResult) cpv.validate(cp, pkixParams);
                 System.out.println("Certificado Válido");
                 System.out.println("Issuer of trust anchor certificate: "
-                        + result.getTrustAnchor().getTrustedCert().getIssuerDN().getName());
+                        + result.getTrustAnchor().getTrustedCert().getIssuerDN().getName());*/
 
                 Certificate cer = uc.getPublicCertificate();
 
@@ -221,10 +221,10 @@ public class Protecao {
                     return false;
                 }
 
-            } catch (CertPathValidatorException cpve) {
+           /* } catch (CertPathValidatorException cpve) {
                 System.out.println("Validation failure, cert[" + cpve.getIndex() + "] :" + cpve.getMessage());
                 return false;
-            }
+            }*/
 
             return validarDados(licencaOficial);
         } else {
@@ -366,6 +366,7 @@ public class Protecao {
         Certificate cer = uc.getPublicCertificate();
         writeToFile("ToSend\\certificadoChavePublica.cer", cer.getEncoded());
         PublicKey pk = uc.getPublicKey(cer);
+        //TODO: Usar a chave publica do novo ficheiro
         writeToFile("ToSend\\chavePublica.txt", pk.getEncoded());
 
         cbc.encrypt(this.licenca, chave, iv);
@@ -374,7 +375,7 @@ public class Protecao {
 
     private PrivateKey getPrivate() {
 
-        KeyPair k = KeyStorage.getKeys("chavesCliente.jks", "123456", "nome");
+        KeyPair k = KeyStorage.getKeys("nomedoficheiro.jks", "123456", "nome");
         System.out.println("Privada:" + k.getPrivate().getEncoded());
         PrivateKey privateKey = k.getPrivate();
         return privateKey;
