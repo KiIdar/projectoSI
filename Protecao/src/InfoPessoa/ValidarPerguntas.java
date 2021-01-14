@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * @author Utilizador
  */
 public class ValidarPerguntas {
-     public void isValidNome(String nome) {
+     public String isValidNome(String nome) {
         nome = JOptionPane.showInputDialog(null, "Escreva o seu nome completo:");
 
         String expression = "^[a-zA-Z\\u00C0-\\u017F´]+\\s+[a-zA-Z\\u00C0-\\u017F´]{0,}$";
@@ -24,10 +24,11 @@ public class ValidarPerguntas {
             nome = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu nome completo:"));
         }
         System.out.println("Nome final: "+nome);
+        return nome;
     }
     
     
-    public void isValidEmail(String email) {
+    public String isValidEmail(String email) {
         email = JOptionPane.showInputDialog(null, "Escreva o seu email:");
 
         String expression = "^(.+)@(.+)$";
@@ -38,9 +39,10 @@ public class ValidarPerguntas {
             email = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu email:"));
         }
         System.out.println("E-mail final: "+email);
+        return email;
     }
     
-    public void isValidNumTelemovel(String numero) {
+    public String isValidNumTelemovel(String numero) {
         numero = JOptionPane.showInputDialog(null, "Escreva o seu numero:");
 
         String expression = "^9[1236][0-9]{7}|2[1-9][0-9]{7}$";
@@ -51,6 +53,7 @@ public class ValidarPerguntas {
             numero = (JOptionPane.showInputDialog(null, "Por favor, escreva o seu numero:"));
         }
         System.out.println("Numero telemovel final: "+numero);
+        return numero;
     }
     
     public void isValidCC(String cc) {

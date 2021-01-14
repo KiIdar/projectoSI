@@ -107,14 +107,15 @@ public class Protecao {
         Datas datas = new Datas();
 
         String email = "";
-        validador.isValidEmail(email);
+        email = validador.isValidEmail(email);
+        
 
         String numTelemovel = "";
-        validador.isValidNumTelemovel(numTelemovel);
+        numTelemovel = validador.isValidNumTelemovel(numTelemovel);
 
         try {
             this.licenca = new Licenca(ip.getIp(), mac.getMac(), hn.getHost(), mb.getMotherboardSN(),
-                    cpu.getCPUSerial(), dr.getSerialDisk(), email, app, dcc.getNome(), numTelemovel, dcc.getCC(),
+                    cpu.getCPUSerial(), dr.getSerialDisk(), app, email, dcc.getNome(), numTelemovel, dcc.getCC(),
                     datas.getDataAtual(), datas.getDataAtual());
         } catch (Exception ex) {
             Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
@@ -213,7 +214,7 @@ public class Protecao {
                 SignedObject signedObject = (SignedObject) objectIn.readObject();
                 SealedObject sealedObject = (SealedObject) signedObject.getObject();
                 System.out.println("cheguei chegando");
-                if (signedObject.verify(uc.getPublicKey(cer), verificationEngine)) {
+                if (signedObject.verify(assimetrica.getPublicKeyGestor(), verificationEngine)) {
                     System.out.println("Assinatura valida!");
                     licencaOficial = decryptLicenca(sealedObject, cipher);
                 } else {
@@ -386,30 +387,30 @@ public class Protecao {
         int contador = 0;
         Date dataFinal = new Date(licencaOficial.getDataFinal());
         
-        
-        if (licencaOficial.getIpAddress() != this.licenca.getIpAddress()) {
+     
+        if (!licencaOficial.getIpAddress().equals(this.licenca.getIpAddress())) {
             return false;
-        } else if (licencaOficial.getMacAddress() != this.licenca.getMacAddress()) {
+        } else if (!licencaOficial.getMacAddress().equals(this.licenca.getMacAddress())) {
             return false;
-        } else if (licencaOficial.getHostName() != this.licenca.getHostName()) {
+        } else if (!licencaOficial.getHostName().equals(this.licenca.getHostName())) {
             return false;
-        } else if (licencaOficial.getSerialMB() != this.licenca.getSerialMB()) {
+        } else if (!licencaOficial.getSerialMB().equals(this.licenca.getSerialMB())) {
             contador++;
-        } else if (licencaOficial.getSerialCPU() != this.licenca.getSerialCPU()) {
+        } else if (!licencaOficial.getSerialCPU().equals(this.licenca.getSerialCPU())) {
             contador++;
-        } else if (licencaOficial.getSerialDisk() != this.licenca.getSerialDisk()) {
+        } else if (!licencaOficial.getSerialDisk().equals(this.licenca.getSerialDisk())) {
             contador++;
-        } else if (licencaOficial.getEmail() != this.licenca.getEmail()) {
+        } else if (!licencaOficial.getEmail().equals(this.licenca.getEmail())) {
             return false;
-        } else if (licencaOficial.getNomeProjecto() != this.licenca.getNomeProjecto()) {
+        } else if (!licencaOficial.getNomeProjecto().equals(this.licenca.getNomeProjecto())) {
             return false;
-        } else if (licencaOficial.getNomeCC() != this.licenca.getNomeCC()) {
+        } else if (!licencaOficial.getNomeCC().equals(this.licenca.getNomeCC())) {
             return false;
-        } else if (licencaOficial.getNumTelemovel() != this.licenca.getNumTelemovel()) {
+        } else if (!licencaOficial.getNumTelemovel().equals(this.licenca.getNumTelemovel())) {
             return false;
-        } else if (licencaOficial.getCc() != this.licenca.getCc()) {
+        } else if (!licencaOficial.getCc().equals(this.licenca.getCc())) {
             return false;
-        } else if (licencaOficial.getDataInicio() != this.licenca.getDataInicio()) {
+        } else if (!licencaOficial.getDataInicio().equals(this.licenca.getDataInicio())) {
             return false;
         } else if (new Date().after(dataFinal)) {
             return false;
