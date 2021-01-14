@@ -358,14 +358,14 @@ public class Protecao {
 
         Ficheiros ficheiros = new Ficheiros();
 
-        ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKey()));
-        ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKey()));
+        ficheiros.escreverFicheiro("ToSend\\chaveSimetrica.txt", assimetrica.encrypt(chave, assimetrica.getPublicKeyGestor()));
+        ficheiros.escreverFicheiro("ToSend\\iv.txt", assimetrica.encrypt(iv, assimetrica.getPublicKeyGestor()));
 
         Validar uc = new Validar();
 
         Certificate cer = uc.getPublicCertificate();
         writeToFile("ToSend\\certificadoChavePublica.cer", cer.getEncoded());
-        PublicKey pk = uc.getPublicKey(cer);
+        PublicKey pk = assimetrica.getPublicKey();
         //TODO: Usar a chave publica do novo ficheiro
         writeToFile("ToSend\\chavePublica.txt", pk.getEncoded());
 

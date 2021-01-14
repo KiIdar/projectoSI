@@ -145,7 +145,7 @@ public class Assinatura {
         System.out.println("Publica:" + k.getPublic().getEncoded());
         System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));
 
-        Signature signature = Signature.getInstance("SHA1withRSA");
+        Signature signature = Signature.getInstance("SHA256withRSA");
         signature.initSign(k.getPrivate());
 
         signedObject = new SignedObject(sealedObject, k.getPrivate(), signature);

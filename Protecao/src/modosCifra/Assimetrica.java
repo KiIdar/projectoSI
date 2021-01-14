@@ -53,7 +53,7 @@ public class Assimetrica {
         return newKeyPair;
     }
 
-    public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public PublicKey getPublicKeyGestor() throws NoSuchAlgorithmException, InvalidKeySpecException {
         KeyPair k = KeyStorage.getKeys("..\\Protecao\\keystore.jks", "123456", "nome");
         System.out.println("Privada:" + k.getPrivate().getEncoded());
         System.out.println("Publica:" + k.getPublic().getEncoded());
@@ -145,6 +145,14 @@ public class Assimetrica {
             Logger.getLogger(Assimetrica.class.getName()).log(Level.SEVERE, null, ex);
         }
         return plainText;
+    }
+
+    public PublicKey getPublicKey() {
+        KeyPair k = KeyStorage.getKeys("nomedoficheiro.jks", "123456", "nome");
+        System.out.println("Privada:" + k.getPrivate().getEncoded());
+        System.out.println("Publica:" + k.getPublic().getEncoded());
+        PublicKey publicKey = k.getPublic();
+        return publicKey;
     }
 
 }
