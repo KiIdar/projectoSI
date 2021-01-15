@@ -23,9 +23,11 @@ public class Calculadora {
         
         Class c = new Object() {}.getClass().getEnclosingClass();
         protecao.init(c.getName(), "3");
+        
        
         if(protecao.isRegistered())
         {
+            protecao.showLicenceInfo();
             System.out.print("Enter two numbers: ");
             
             // nextDouble() reads the next double from the keyboard

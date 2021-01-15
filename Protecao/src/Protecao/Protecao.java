@@ -108,7 +108,6 @@ public class Protecao {
 
         String email = "";
         email = validador.isValidEmail(email);
-        
 
         String numTelemovel = "";
         numTelemovel = validador.isValidNumTelemovel(numTelemovel);
@@ -191,42 +190,41 @@ public class Protecao {
                 System.out.println("Issuer of trust anchor certificate: "
                         + result.getTrustAnchor().getTrustedCert().getIssuerDN().getName());*/
 
-                Certificate cer = uc.getPublicCertificate();
+            Certificate cer = uc.getPublicCertificate();
 
-                //Pega na chave publica
-                PublicKey pk = uc.getPublicKey(cer);
+            //Pega na chave publica
+            PublicKey pk = uc.getPublicKey(cer);
 
-                Assimetrica assimetrica = new Assimetrica();
+            Assimetrica assimetrica = new Assimetrica();
 
-                byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\iv"), getPrivate());
-                byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\chaveSimetrica"), getPrivate());
+            byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\iv"), getPrivate());
+            byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\chaveSimetrica"), getPrivate());
 
-                SecretKey key = new SecretKeySpec(chave, "AES");
-                Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-                cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+            SecretKey key = new SecretKeySpec(chave, "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 
-                File file = new File("LicencaOficial\\licenca.aes");
-                file.getParentFile().mkdirs();
-                FileInputStream fos = new FileInputStream(file);
-                BufferedInputStream bos = new BufferedInputStream(fos);
-                CipherInputStream cos = new CipherInputStream(bos, cipher);
-                ObjectInputStream objectIn = new ObjectInputStream(cos);
-                SignedObject signedObject = (SignedObject) objectIn.readObject();
-                SealedObject sealedObject = (SealedObject) signedObject.getObject();
-                System.out.println("cheguei chegando");
-                if (signedObject.verify(assimetrica.getPublicKeyGestor(), verificationEngine)) {
-                    System.out.println("Assinatura valida!");
-                    licencaOficial = decryptLicenca(sealedObject, cipher);
-                } else {
-                    System.out.println("Assinatura não valida!");
-                    return false;
-                }
+            File file = new File("LicencaOficial\\licenca.aes");
+            file.getParentFile().mkdirs();
+            FileInputStream fos = new FileInputStream(file);
+            BufferedInputStream bos = new BufferedInputStream(fos);
+            CipherInputStream cos = new CipherInputStream(bos, cipher);
+            ObjectInputStream objectIn = new ObjectInputStream(cos);
+            SignedObject signedObject = (SignedObject) objectIn.readObject();
+            SealedObject sealedObject = (SealedObject) signedObject.getObject();
+            System.out.println("cheguei chegando");
+            if (signedObject.verify(assimetrica.getPublicKeyGestor(), verificationEngine)) {
+                System.out.println("Assinatura valida!");
+                licencaOficial = decryptLicenca(sealedObject, cipher);
+            } else {
+                System.out.println("Assinatura não valida!");
+                return false;
+            }
 
-           /* } catch (CertPathValidatorException cpve) {
+            /* } catch (CertPathValidatorException cpve) {
                 System.out.println("Validation failure, cert[" + cpve.getIndex() + "] :" + cpve.getMessage());
                 return false;
             }*/
-
             return validarDados(licencaOficial);
         } else {
             System.out.println("Licenca não existe");
@@ -271,7 +269,20 @@ public class Protecao {
     }
 
     public void showLicenceInfo() {
-        //TODO Desencriptar a licença e apresentala ao utilizador
+        System.out.println("HostName: " + this.licenca.getHostName());
+        System.out.println("Data Final: " + this.licenca.getDataFinal());
+        System.out.println("Data Inicio: " + this.licenca.getDataInicio());
+        System.out.println("Email: " + this.licenca.getEmail());
+        System.out.println("Ip Adress: " + this.licenca.getIpAddress());
+        System.out.println("Mac Adress: " + this.licenca.getMacAddress());
+        System.out.println("Nome Projecto: " + this.licenca.getNomeProjecto());
+        System.out.println("Nome CC: " + this.licenca.getNomeCC());
+        System.out.println("Numero Telemovel: " + this.licenca.getNumTelemovel());
+        System.out.println("Numero CC: " + this.licenca.getNumeroCC());
+        System.out.println("Serial CPU: " + this.licenca.getSerialCPU());
+        System.out.println("Serial Disk: " + this.licenca.getSerialDisk());
+        System.out.println("Serial MB: " + this.licenca.getSerialMB());
+
     }
 
     /* public void testarAssimetrica() {
@@ -386,8 +397,7 @@ public class Protecao {
 
         int contador = 0;
         Date dataFinal = new Date(licencaOficial.getDataFinal());
-        
-     
+
         if (!licencaOficial.getIpAddress().equals(this.licenca.getIpAddress())) {
             return false;
         } else if (!licencaOficial.getMacAddress().equals(this.licenca.getMacAddress())) {
@@ -419,6 +429,7 @@ public class Protecao {
         if (contador >= 2) {
             return false;
         } else {
+            this.licenca = licencaOficial;
             return true;
         }
     }
