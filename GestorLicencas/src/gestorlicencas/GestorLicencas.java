@@ -33,7 +33,6 @@ public class GestorLicencas {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException, Exception {
-        Assimetrica assimetrica = new Assimetrica();
 
         //System.out.println(assimetrica.decrypt(ficheiro.lerFicheiro("mensagem.txt"), keyPair.getPrivate()));
 //      Licenca licenca = cbc.decrypt(chave, iv);
@@ -61,13 +60,12 @@ public class GestorLicencas {
         System.out.println("Privada:" + k.getPrivate().getEncoded());
         System.out.println("Publica:" + k.getPublic().getEncoded());
         System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));
-        
+
         /*
         KeyPair k = KeyStorage.getKeys("chavesCliente.jks", "123456", "nomes");
         System.out.println("Privada:" + k.getPrivate().getEncoded());
         System.out.println("Publica:" + k.getPublic().getEncoded());
         System.out.println(Base64.getEncoder().encodeToString(k.getPublic().getEncoded()));*/
-
         SealedObject sealedObject = cbc.encryptLicenca(licenca, chave, iv);
         assinatura.signLicenca(sealedObject, chave, iv);
 

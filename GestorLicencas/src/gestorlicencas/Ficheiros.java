@@ -23,7 +23,7 @@ public class Ficheiros {
         //System.out.println("Pasta com texto: " + dados);
         try {
             File myObj = new File(nomePasta);
-            myObj.getParentFile().mkdirs();
+            //myObj.getParentFile().mkdirs();
             OutputStream os = new FileOutputStream(myObj);
 
             if (myObj.exists()) {

@@ -18,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -54,11 +55,25 @@ public class Assimetrica {
     }
 
     public PublicKey getPublicKeyGestor() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        KeyPair k = KeyStorage.getKeys("..\\Protecao\\keystore.jks", "123456", "nome");
-        System.out.println("Privada:" + k.getPrivate().getEncoded());
-        System.out.println("Publica:" + k.getPublic().getEncoded());
-        PublicKey publicKey = k.getPublic();
-        return publicKey;
+        Ficheiros f = new Ficheiros();
+    
+        return reconstruct_public_key("RSA", f.lerFicheiro("..\\Protecao\\chavePublicaGestor.txt"));
+    }
+    
+    public PublicKey reconstruct_public_key(String algorithm, byte[] pub_key) {
+        PublicKey public_key = null;
+
+        try {
+            KeyFactory kf = KeyFactory.getInstance(algorithm);
+            EncodedKeySpec pub_key_spec = new X509EncodedKeySpec(pub_key);
+            public_key = kf.generatePublic(pub_key_spec);
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Could not reconstruct the public key, the given algorithm oculd not be found.");
+        } catch (InvalidKeySpecException e) {
+            System.out.println("Could not reconstruct the public key");
+        }
+
+        return public_key;
     }
 
     public KeyPair getKeyPairFromKeyStore() throws Exception {
