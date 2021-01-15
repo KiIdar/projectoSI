@@ -25,7 +25,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
-import sun.security.provider.DSAKeyPairGenerator;
 
 public class GestorLicencas {
 

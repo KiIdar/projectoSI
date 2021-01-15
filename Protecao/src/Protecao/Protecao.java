@@ -14,12 +14,16 @@ import KeyStorage.KeyStorage;
 import Licenca.Licenca;
 import Validacoes.Validar;
 import static Validacoes.Validar.writeToFile;
+import static com.sun.org.apache.xerces.internal.util.FeatureState.is;
+import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.InvalidAlgorithmParameterException;
@@ -40,8 +44,10 @@ import java.security.cert.CertPath;
 import java.security.cert.CertPathBuilder;
 import java.security.cert.CertPathBuilderException;
 import java.security.cert.CertPathBuilderResult;
+import java.security.cert.CertPathParameters;
 import java.security.cert.CertPathValidator;
 import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertPathValidatorResult;
 import java.security.cert.CertStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -60,6 +66,7 @@ import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -86,12 +93,6 @@ public class Protecao {
         this.ks = KeyStore.getInstance("PKCS11", provider);
         this.ks.load(null, null);
         this.licenca = null;
-
-        /*this.ks.load(null, "123456".toCharArray());
-        FileInputStream is = new FileInputStream("keystore.jks");
-        ks = KeyStore.getInstance("jks");
-        ks.load(is, "123456".toCharArray());
-        System.out.println("sup");*/
     }
 
     public void init(String app, String versao) {
@@ -121,12 +122,39 @@ public class Protecao {
         }
     }
 
-    public PublicKey getPublicKey(Certificate cer) {
-        return cer.getPublicKey();
-    }
+    public boolean verificarCertificado(X509Certificate cer, PublicKey pk) throws CertificateException, KeyStoreException, FileNotFoundException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, CertPathBuilderException, CertPathValidatorException, IOException {
 
-    public Certificate getPublicCertificate() throws KeyStoreException {
-        return this.ks.getCertificate("CITIZEN AUTHENTICATION CERTIFICATE");
+        //final CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        //final KeyStore trustStore = KeyStore.getInstance("JKS");
+        //FileInputStream certificateToCheck = new FileInputStream("LicencaOficial\\certificadoKeyStores.cer");
+        // X509Certificate certificado = (X509Certificate) certificateFactory.generateCertificate(certificateToCheck);
+        try {
+            String caminhoDoCertificadoDoCliente = "C:\\Users\\rFael\\Documents\\GitKraken\\projectoSI\\projectoSI\\LicencaOficial\\certificadoKeyStores.cer";
+            String senhaDoCertificadoDoCliente = "123456";
+
+            KeyStore keystore = KeyStore.getInstance("JKS");
+            keystore.load(new FileInputStream(caminhoDoCertificadoDoCliente), senhaDoCertificadoDoCliente.toCharArray());
+
+            Enumeration<String> eAliases = keystore.aliases();
+
+            while (eAliases.hasMoreElements()) {
+                String alias = (String) eAliases.nextElement();
+                Certificate certificado = (Certificate) keystore.getCertificate(alias);
+
+                System.out.println("Aliais: " + alias);
+                X509Certificate cert = (X509Certificate) certificado;
+
+                System.out.println(cert.getSubjectDN().getName());
+
+            }
+            System.out.println("Certificado válido!");
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            System.out.println("Certificado inválido!");
+            return false;
+        }
+
     }
 
     public boolean isRegistered() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, FileNotFoundException, IOException, ClassNotFoundException, CertificateException, KeyStoreException, CertPathBuilderException, SignatureException, CertPathValidatorException {
@@ -141,91 +169,38 @@ public class Protecao {
             CertificateFactory fact = CertificateFactory.getInstance("X.509");
             FileInputStream is = new FileInputStream("LicencaOficial\\certificadoKeyStores.cer");
             X509Certificate certificado = (X509Certificate) fact.generateCertificate(is);
-            /*PKIXParameters par = new PKIXParameters(ks);
-            for (TrustAnchor ta : par.getTrustAnchors()) {
-                X509Certificate c = ta.getTrustedCert();
-                System.out.println(c.getSubjectDN().getName());
-            }
 
-            //defines the end-user certificate as a selector
-            X509CertSelector cs = new X509CertSelector();
-            cs.setCertificate((X509Certificate) certificado);
-//Create an object to build the certification path
-            CertPathBuilder cpb = CertPathBuilder.getInstance("PKIX");
-//Define the parameters to buil the certification path and provide the Trust anchor
-//certificates (trustAnchors) and the end user certificate (cs)
-            PKIXBuilderParameters pkixBParams = new PKIXBuilderParameters(par.getTrustAnchors(), cs);
-            pkixBParams.setRevocationEnabled(false); //No revocation check
-//Provide the intermediate certificates (iCerts)
-            CollectionCertStoreParameters ccsp
-                    = new CollectionCertStoreParameters(Arrays.asList());
-            CertStore store = CertStore.getInstance("Collection", ccsp);
-            pkixBParams.addCertStore(store);
-//Build the certification path
-            CertPath cp = null;
-            try {
-                CertPathBuilderResult cpbr = cpb.build(pkixBParams);
-                cp = cpbr.getCertPath();
-                System.out.println("Certification path built with success!");
-            } catch (CertPathBuilderException ex) {
-                System.out.println("It was not possible to build a certification path!");
-            }
+            //if (verificarCertificado(certificado, certificado.getPublicKey()) == true) {
+                Assimetrica assimetrica = new Assimetrica();
 
-            PKIXParameters pkixParams = new PKIXParameters(par.getTrustAnchors());
-//Class that performs the certification path validation
-            CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
-//Disables the previous mechanism for revocation check (pre Java8)
-            pkixParams.setRevocationEnabled(false);
-//Enable OCSP verification
-            Security.setProperty("ocsp.enable", "true");
-//Instantiate a PKIXRevocationChecker class
-            PKIXRevocationChecker rc = (PKIXRevocationChecker) cpv.getRevocationChecker();
-//Configure to validate all certificates in chain using only OCSP
-            rc.setOptions(EnumSet.of(PKIXRevocationChecker.Option.SOFT_FAIL, PKIXRevocationChecker.Option.NO_FALLBACK));
-            PKIXCertPathValidatorResult result = null;
-            try {
-//Do the velidation
-                result = (PKIXCertPathValidatorResult) cpv.validate(cp, pkixParams);
-                System.out.println("Certificado Válido");
-                System.out.println("Issuer of trust anchor certificate: "
-                        + result.getTrustAnchor().getTrustedCert().getIssuerDN().getName());*/
+                byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\iv"), getPrivate());
+                byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\chaveSimetrica"), getPrivate());
 
-            Certificate cer = uc.getPublicCertificate();
+                SecretKey key = new SecretKeySpec(chave, "AES");
+                Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+                cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 
-            //Pega na chave publica
-            PublicKey pk = uc.getPublicKey(cer);
+                File file = new File("LicencaOficial\\licenca.aes");
+                file.getParentFile().mkdirs();
+                FileInputStream fos = new FileInputStream(file);
+                BufferedInputStream bos = new BufferedInputStream(fos);
+                CipherInputStream cos = new CipherInputStream(bos, cipher);
+                ObjectInputStream objectIn = new ObjectInputStream(cos);
+                SignedObject signedObject = (SignedObject) objectIn.readObject();
+                SealedObject sealedObject = (SealedObject) signedObject.getObject();
 
-            Assimetrica assimetrica = new Assimetrica();
+                if (signedObject.verify(assimetrica.getPublicKeyGestor(), verificationEngine)) {
+                    System.out.println("Assinatura valida!");
+                    licencaOficial = decryptLicenca(sealedObject, cipher);
+                } else {
+                    System.out.println("Assinatura não valida!");
+                    return false;
+                }
 
-            byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\iv"), getPrivate());
-            byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("LicencaOficial\\chaveSimetrica"), getPrivate());
-
-            SecretKey key = new SecretKeySpec(chave, "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-
-            File file = new File("LicencaOficial\\licenca.aes");
-            file.getParentFile().mkdirs();
-            FileInputStream fos = new FileInputStream(file);
-            BufferedInputStream bos = new BufferedInputStream(fos);
-            CipherInputStream cos = new CipherInputStream(bos, cipher);
-            ObjectInputStream objectIn = new ObjectInputStream(cos);
-            SignedObject signedObject = (SignedObject) objectIn.readObject();
-            SealedObject sealedObject = (SealedObject) signedObject.getObject();
-            System.out.println("cheguei chegando");
-            if (signedObject.verify(assimetrica.getPublicKeyGestor(), verificationEngine)) {
-                System.out.println("Assinatura valida!");
-                licencaOficial = decryptLicenca(sealedObject, cipher);
-            } else {
-                System.out.println("Assinatura não valida!");
-                return false;
-            }
-
-            /* } catch (CertPathValidatorException cpve) {
-                System.out.println("Validation failure, cert[" + cpve.getIndex() + "] :" + cpve.getMessage());
+                return validarDados(licencaOficial);
+            /*} else {
                 return false;
             }*/
-            return validarDados(licencaOficial);
         } else {
             System.out.println("Licenca não existe");
             return false;
@@ -238,22 +213,38 @@ public class Protecao {
         Licenca licenca = null;
         try {
             licenca = cbc.decrypt(cipher, sealedObject);
+
         } catch (IOException ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (NoSuchPaddingException ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (InvalidKeyException ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (BadPaddingException ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return licenca;
     }
@@ -261,14 +252,17 @@ public class Protecao {
     public boolean startRegistration() {
         try {
             instanciarLicenca(5);
+
         } catch (Exception ex) {
-            Logger.getLogger(Protecao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Protecao.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         return true;
     }
 
     public void showLicenceInfo() {
+        System.out.println(">>>>> SHOW LICENCE INFO <<<<<");
         System.out.println("HostName: " + this.licenca.getHostName());
         System.out.println("Data Final: " + this.licenca.getDataFinal());
         System.out.println("Data Inicio: " + this.licenca.getDataInicio());

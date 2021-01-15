@@ -94,15 +94,6 @@ public class Assinatura {
         ks.load(is, "123456".toCharArray());*/
     }
 
-    public static void verificarCertificado(X509Certificate cer) {
-        try {
-            cer.checkValidity();
-            System.out.println("certificado valido");
-        } catch (Exception e) {
-            System.out.println("certificado inválido");
-        }
-    }
-
     private Licenca decryptLicenca(SealedObject sealedObject, Cipher cipher) {
         CBC cbc = new CBC();
         Licenca licenca = null;
@@ -168,24 +159,6 @@ public class Assinatura {
         //signature.update(sealedObject);
         byte[] assinatura = signature.sign();
 
-        //signature.initVerify(k.getPublic());
-        //signature.update(sealedObject);
-        /*if (signature.verify(assinatura)) {
-            //Mensagem assinada corretamente
-            System.out.println("Assinatura válida!");
-
-            CertificateFactory fact = CertificateFactory.getInstance("X.509");
-
-            FileInputStream is = new FileInputStream("certificadoKeyStore.cer");
-
-            X509Certificate certificado = (X509Certificate) fact.generateCertificate(is);
-
-            verificarCertificado(certificado);
-
-        } else {
-            //Mensagem não pode ser validada
-            System.out.println("Assinatura inválida!");
-        }*/
         return signedObject;
     }
 
@@ -259,6 +232,7 @@ public class Assinatura {
 
             Assimetrica assimetrica = new Assimetrica();
             KeyPair keyPair = assimetrica.getKeyPair();
+         
 
             byte[] iv = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\iv.txt"), keyPair.getPrivate());
             byte[] chave = assimetrica.decrypt(ficheiro.lerFicheiro("ToSend\\chaveSimetrica.txt"), keyPair.getPrivate());
